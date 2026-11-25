@@ -21,6 +21,21 @@ Tests: 98100-98199 (workbook sheet Test App Ranges, row 99014)
 | Permission set | 10035488 | BIFROST ODBCRead ori |
 | Permission set extension | 10035489 | ODBC Full Role ori |
 | Permission set extension | 10035490 | ODBC Read Role ori |
+| Enum | 10035500 | ODBC Blob Auth Type ori |
+| Table | 10035491 | ODBC Relay Connection ori |
+| Table | 10035492 | ODBC Blob Container ori |
+| Table | 10035493 | ODBC Source ori |
+| Page | 10035494 | ODBC Relay Connection Card ori |
+| Page | 10035495 | ODBC Relay Connections ori |
+| Page | 10035496 | ODBC Blob Container Card ori |
+| Page | 10035497 | ODBC Blob Containers ori |
+| Page | 10035498 | ODBC Source Card ori |
+| Page | 10035499 | ODBC Sources ori |
+| Codeunit | 10035501 | ODBC Secret Mgt ori |
+| Codeunit | 10035502 | ODBC Setup Validation ori |
+| Page | 10035503 | ODBC Secret Entry ori |
+| Enum | 10035504 | ODBC Secret Kind ori |
+| Test codeunit | 98102 | ODBC Setup Tst ori |
 | Test codeunit | 98100 | ODBC Scaffold Tst ori |
 | Test permission set | 98101 | ODBC Setup Test ori |
 
