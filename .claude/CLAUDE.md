@@ -41,6 +41,16 @@ Tests: 98100-98199 (workbook sheet Test App Ranges, row 99014)
 | Enum | 10035508 | ODBC Transport ori |
 | Codeunit | 10035509 | ODBC Relay Transport ori |
 | Codeunit | 10035510 | ODBC Blob Transport ori |
+| Enum extension | 10035516 | ODBC Message Type ori |
+| Codeunit | 10035517 | ODBC Src List Impl ori |
+| Codeunit | 10035518 | ODBC Src Test Impl ori |
+| Codeunit | 10035519 | ODBC Schema Get Impl ori |
+| Codeunit | 10035520 | ODBC Query Run Impl ori |
+| Codeunit | 10035521 | ODBC Message Handler ori |
+| Codeunit | 10035522 | ODBC Contract Parts ori |
+| Codeunit | 10035523 | ODBC Read Statement ori |
+| Test codeunit | 98140 | ODBC Messages Tst ori |
+| Test API page | 98141 | ODBC MCP Fixture ori |
 | Test codeunit | 98120 | ODBC Client Tst ori |
 | Test enum extension | 98121 | ODBC Mock Transport ori |
 | Test codeunit | 98122 | ODBC Mock Transport ori |

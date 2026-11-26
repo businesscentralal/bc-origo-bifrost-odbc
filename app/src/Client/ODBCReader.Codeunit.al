@@ -148,6 +148,15 @@ codeunit 10035507 "ODBC Reader ori"
             Truncated := Truncated or Token.AsValue().AsBoolean();
     end;
 
+    /// <summary>Returns the positioned row without converting JSON scalar types.</summary>
+    /// <returns>A copy of the current row.</returns>
+    procedure GetRowJson(): JsonObject
+    begin
+        if (Position < 1) or (Position > Rows.Count()) then
+            Error(NoRowErr);
+        exit(CurrentRow.Clone().AsObject());
+    end;
+
     local procedure GetValue(ColumnName: Text): JsonValue
     var
         Token: JsonToken;

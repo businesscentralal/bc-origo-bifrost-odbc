@@ -12,7 +12,7 @@ permissionset 10035488 "BIFROST ODBCRead ori"
     Permissions =
         tabledata "ODBC Relay Connection ori" = R,
         tabledata "ODBC Blob Container ori" = R,
-        tabledata "ODBC Source ori" = R,
+        tabledata "ODBC Source ori" = Rm,
         table "ODBC Relay Connection ori" = X,
         table "ODBC Blob Container ori" = X,
         table "ODBC Source ori" = X,
@@ -28,5 +28,12 @@ permissionset 10035488 "BIFROST ODBCRead ori"
         codeunit "ODBC Client ori" = X,
         codeunit "ODBC Reader ori" = X,
         codeunit "ODBC Relay Transport ori" = X,
-        codeunit "ODBC Blob Transport ori" = X;
+        codeunit "ODBC Blob Transport ori" = X,
+        codeunit "ODBC Src List Impl ori" = X,
+        codeunit "ODBC Src Test Impl ori" = X,
+        codeunit "ODBC Schema Get Impl ori" = X,
+        codeunit "ODBC Query Run Impl ori" = X,
+        codeunit "ODBC Message Handler ori" = X,
+        codeunit "ODBC Contract Parts ori" = X,
+        codeunit "ODBC Read Statement ori" = X;
 }
