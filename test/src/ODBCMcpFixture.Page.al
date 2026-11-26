@@ -22,10 +22,23 @@ page 98141 "ODBC MCP Fixture ori"
         {
             repeater(General)
             {
-                field(id; Rec.SystemId) { Caption = 'Id', Locked = true; Editable = false; }
-                field(code; Rec.Code) { Caption = 'Code', Locked = true; }
-                field(blocked; Rec.Blocked) { Caption = 'Blocked', Locked = true; }
-                field(readOnly; Rec."Read Only") { Caption = 'Read only', Locked = true; }
+                field(id; Rec.SystemId)
+                {
+                    Caption = 'Id', Locked = true;
+                    Editable = false;
+                }
+                field(code; Rec.Code)
+                {
+                    Caption = 'Code', Locked = true;
+                }
+                field(blocked; Rec.Blocked)
+                {
+                    Caption = 'Blocked', Locked = true;
+                }
+                field(readOnly; Rec."Read Only")
+                {
+                    Caption = 'Read only', Locked = true;
+                }
             }
         }
     }

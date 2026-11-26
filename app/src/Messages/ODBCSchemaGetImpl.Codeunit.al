@@ -37,8 +37,10 @@ codeunit 10035519 "ODBC Schema Get Impl ori" implements "Msg Interface ori", "Ms
 
     /// <summary>Returns localized search text.</summary>
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'ODBC schema, database tables, database views, column types, SQL dialect', Comment = 'is-IS=ODBC-skema, gagnagrunnstöflur, gagnagrunnssýnir, dálkagerðir, SQL-mállýska';
     begin
-        exit(DescriptionLbl);
+        exit(KeywordsLbl);
     end;
 
     /// <summary>Returns localized selection help.</summary>

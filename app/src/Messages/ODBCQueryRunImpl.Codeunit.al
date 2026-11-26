@@ -37,8 +37,10 @@ codeunit 10035520 "ODBC Query Run Impl ori" implements "Msg Interface ori", "Msg
 
     /// <summary>Returns localized search text.</summary>
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'ODBC query, read only SQL, SELECT query, positional parameters, row limit', Comment = 'is-IS=ODBC-fyrirspurn, SQL-lestur, SELECT-fyrirspurn, stikar í röð, línuhámark';
     begin
-        exit(DescriptionLbl);
+        exit(KeywordsLbl);
     end;
 
     /// <summary>Returns localized selection help.</summary>

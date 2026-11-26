@@ -37,8 +37,10 @@ codeunit 10035518 "ODBC Src Test Impl ori" implements "Msg Interface ori", "Msg 
 
     /// <summary>Returns localized search text.</summary>
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'ODBC connection test, test data source, database driver, database identity', Comment = 'is-IS=prófa ODBC-tengingu, prófa gagnauppsprettu, gagnagrunnsrekill, auðkenni gagnagrunns';
     begin
-        exit(DescriptionLbl);
+        exit(KeywordsLbl);
     end;
 
     /// <summary>Returns localized selection help.</summary>

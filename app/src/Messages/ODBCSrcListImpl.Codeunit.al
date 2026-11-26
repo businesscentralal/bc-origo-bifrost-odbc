@@ -37,8 +37,10 @@ codeunit 10035517 "ODBC Src List Impl ori" implements "Msg Interface ori", "Msg 
 
     /// <summary>Returns localized search text.</summary>
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'ODBC sources, list data sources, available databases, read only sources', Comment = 'is-IS=ODBC-uppsprettur, lista gagnauppsprettur, tiltækir gagnagrunnar, lesuppsprettur';
     begin
-        exit(DescriptionLbl);
+        exit(KeywordsLbl);
     end;
 
     /// <summary>Returns localized selection help.</summary>

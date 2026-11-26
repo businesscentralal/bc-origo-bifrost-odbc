@@ -273,6 +273,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Keyrir eina SELECT-lesfyrirspurn með stika í röð og línuhámarki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Query Run Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2323267959 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ODBC query, read only SQL, SELECT query, positional parameters, row limit</source>
+          <target>ODBC-fyrirspurn, SQL-lestur, SELECT-fyrirspurn, stikar í röð, línuhámark</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC-fyrirspurn, SQL-lestur, SELECT-fyrirspurn, stikar í röð, línuhámark</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Query Run Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3843028437 - NamedType 545819735" size-unit="char" translate="yes" xml:space="preserve">
           <source>The ODBC agent returned an invalid row result.</source>
           <target>ODBC-miðlarinn skilaði ógildri línuniðurstöðu.</target>
@@ -308,6 +314,12 @@
           <target>Les töflur, sýnir og dálka úr ODBC-uppsprettu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Les töflur, sýnir og dálka úr ODBC-uppsprettu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Schema Get Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 787729931 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ODBC schema, database tables, database views, column types, SQL dialect</source>
+          <target>ODBC-skema, gagnagrunnstöflur, gagnagrunnssýnir, dálkagerðir, SQL-mállýska</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC-skema, gagnagrunnstöflur, gagnagrunnssýnir, dálkagerðir, SQL-mállýska</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Schema Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1812664066 - NamedType 1406775333" size-unit="char" translate="yes" xml:space="preserve">
           <source>The ODBC request failed. The agent diagnostic contained sensitive or oversized content.</source>
@@ -363,11 +375,23 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sýnir skilgreindar ODBC-uppsprettur án tengiupplýsinga.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Src List Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1740853258 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ODBC sources, list data sources, available databases, read only sources</source>
+          <target>ODBC-uppsprettur, lista gagnauppsprettur, tiltækir gagnagrunnar, lesuppsprettur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC-uppsprettur, lista gagnauppsprettur, tiltækir gagnagrunnar, lesuppsprettur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Src List Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 544646670 - NamedType 3569966352" maxwidth="250" size-unit="char" translate="yes" xml:space="preserve">
           <source>Tests an ODBC source and returns its driver and database identity.</source>
           <target>Prófar ODBC-uppsprettu og skilar rekli og auðkenni gagnagrunns.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Prófar ODBC-uppsprettu og skilar rekli og auðkenni gagnagrunns.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Src Test Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 544646670 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ODBC connection test, test data source, database driver, database identity</source>
+          <target>prófa ODBC-tengingu, prófa gagnauppsprettu, gagnagrunnsrekill, auðkenni gagnagrunns</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=prófa ODBC-tengingu, prófa gagnauppsprettu, gagnagrunnsrekill, auðkenni gagnagrunns</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Src Test Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Page 1957606202 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>ODBC Blob Container</source>
