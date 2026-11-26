@@ -33,25 +33,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check for agent sources
+        id: agent
+        shell: bash
+        run: |
+          if [ -f agent/Build-Agent.ps1 ]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; echo "No agent/ sources on this ref; nothing to build."; fi
+
       - name: Set up .NET 8
+        if: steps.agent.outputs.present == 'true'
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
       - name: Install unixODBC and the SQLite ODBC driver
+        if: steps.agent.outputs.present == 'true'
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq unixodbc libsqliteodbc
           odbcinst -q -d
 
       - name: Build and test (Build-Agent.ps1, linux-x64)
+        if: steps.agent.outputs.present == 'true'
         shell: pwsh
         env:
           BIFROST_TEST_SQLITE_DRIVER: SQLite3
         run: ./agent/Build-Agent.ps1 -Runtime linux-x64 -OutputDirectory "$env:RUNNER_TEMP/agent-out"
 
       - name: Upload test results
-        if: always()
+        if: always() && steps.agent.outputs.present == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: odbc-agent-test-results-${{ github.sha }}
@@ -68,12 +77,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check for agent sources
+        id: agent
+        shell: bash
+        run: |
+          if [ -f agent/Build-Agent.ps1 ]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; echo "No agent/ sources on this ref; nothing to build."; fi
+
       - name: Set up .NET 8
+        if: steps.agent.outputs.present == 'true'
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
       - name: Publish (unsigned)
+        if: steps.agent.outputs.present == 'true'
         shell: pwsh
         run: |
           $out = Join-Path $env:RUNNER_TEMP 'agent-out'
@@ -86,6 +103,7 @@ jobs:
             Set-Content -LiteralPath (Join-Path $out 'SHA256SUMS.txt') -Encoding utf8
 
       - name: Upload agent (unsigned) and checksums
+        if: steps.agent.outputs.present == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: odbc-agent-win-x64-unsigned-${{ github.sha }}
