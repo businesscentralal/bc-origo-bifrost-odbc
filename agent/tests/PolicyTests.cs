@@ -118,8 +118,17 @@ public sealed class PolicyTests
         var settings = Settings(writeConnection: "Driver={Unit only};Database=XWriteFixture");
         Assert.Equal(settings.ReadOnlyConnection, settings.Decrypt(Encrypt(settings, settings.ReadOnlyConnection), true));
         Assert.Equal(settings.WriteConnection, settings.Decrypt(Encrypt(settings, settings.WriteConnection!), false));
-        Assert.Throws<InvalidOperationException>(() => settings.Decrypt(Encrypt(settings, settings.WriteConnection!), true));
+        Assert.Equal(settings.ReadOnlyConnection, settings.Decrypt(Encrypt(settings, settings.WriteConnection!), true));
         Assert.Throws<InvalidOperationException>(() => settings.Decrypt(Encrypt(settings, settings.ReadOnlyConnection), false));
+    }
+
+    [Fact]
+    public void UnconfiguredDestinationCannotUseEitherConnectionPolicy()
+    {
+        var settings = Settings(writeConnection: "Driver={Unit only};Database=XWriteFixture");
+        string encrypted = Encrypt(settings, "Driver={Unit only};Database=XUnconfiguredFixture");
+        Assert.Throws<InvalidOperationException>(() => settings.Decrypt(encrypted, true));
+        Assert.Throws<InvalidOperationException>(() => settings.Decrypt(encrypted, false));
     }
 
     [Theory]

@@ -25,7 +25,7 @@ Settu eftirfarandi umhverfisbreytur upp með samþykktri leyndarmáladreifingu f
 
 Deildu nýjum slembilykli um samþykkta örugga leið. Í BC notarðu **Set AES key** og setur samsvarandi vigur. Notaðu **Set connection string** fyrir tengistrenginn. Dulkóðunin er AES-CBC/PKCS7 yfir UTF-8, samhæfð Rijndael-veitu BC. CBC staðfestir ekki sjálft heilleika beiðninnar: Relay-heimildir og TLS eru nauðsynleg. Ekki opna undirferlið fyrir netaðgang. Notaðu sérstakt þjónustutilvik og lykil fyrir hverja gagnaveitu/öryggismörk. Endurnýjaðu stillingar beggja vegna samtímis.
 
-Afkóðaði tengistrengurinn verður að samsvara vernduðu þjónustustillingunni **nákvæmlega**. Beiðni getur því ekki skipt yfir á annan DSN, annan gagnagrunn eða skrifandi auðkenni. Fyrir fleiri gagnaveitur eru sett upp aðskilin þjónustutilvik. Afkóðun ein og sér heimilar ekki tengingu.
+Afkóðaði tengistrengurinn verður að samsvara öðrum vernduðum tengistreng þjónustunnar **nákvæmlega**. Lesaðgerðir samþykkja hvora samþykkta tengingu sem er en opna alltaf `BIFROST_ODBC_READ_CONNECTION`; þannig getur AL-gagnaveita sem styður Execute líka lesið með skrifvörn. Execute samþykkir aðeins `BIFROST_ODBC_WRITE_CONNECTION`. Báðar þjónustutengingar verða að vísa á sömu gagnaveitu með aðskildum les-/skrifauðkennum. Beiðni getur ekki skipt yfir á annan DSN eða gagnagrunn né látið lestur nota skrifandi auðkenni. Fyrir fleiri gagnaveitur eru sett upp aðskilin þjónustutilvik. Afkóðun ein og sér heimilar ekki tengingu.
 
 ## Skrifvörn gagnagrunns
 

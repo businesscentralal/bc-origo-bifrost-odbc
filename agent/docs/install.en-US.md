@@ -25,7 +25,7 @@ Provision the following environment variables through your approved secret deplo
 
 Exchange a newly generated key through an approved secret channel. Store it in BC through **Set AES key**, and set the matching vector. Set the connection through **Set connection string**. Ciphertext is AES-CBC with PKCS7 padding over UTF-8 bytes, compatible with BC's Rijndael provider. CBC does not authenticate the payload: Relay authorization and TLS are required; never expose the worker subprocess as a public endpoint. Dedicate a listener and AES key to one source/security boundary. Rotate both sides together.
 
-The decrypted connection must match the configured connection **exactly**. This pins the destination and identity; a request cannot substitute another DSN, database or a writable identity. Configure additional independent service instances for additional sources. A connection string is never accepted merely because it can be decrypted.
+The decrypted connection must match one of the configured connections **exactly**. Read operations accept either approved source connection but always open `BIFROST_ODBC_READ_CONNECTION`; this lets an AL source that supports Execute also perform safe reads. Execute accepts only `BIFROST_ODBC_WRITE_CONNECTION`. Both configured connections must refer to the same intended source, using separate read/write identities. This pins the destination and identity; a request cannot substitute another DSN or database, or cause a read to use writable credentials. Configure additional independent service instances for additional sources. A connection string is never accepted merely because it can be decrypted.
 
 ## Database protection
 

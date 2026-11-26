@@ -38,12 +38,18 @@ public sealed class Settings
         try
         {
             var connection = new UTF8Encoding(false, true).GetString(bytes);
-            var allowed = readOnly ? ReadOnlyConnection : WriteConnection;
-            if (string.IsNullOrEmpty(allowed) || !CryptographicOperations.FixedTimeEquals(
-                SHA256.HashData(Encoding.UTF8.GetBytes(connection)),
-                SHA256.HashData(Encoding.UTF8.GetBytes(allowed))))
-                throw new InvalidOperationException("Connection is not permitted.");
-            return connection;
+            var suppliedHash = SHA256.HashData(Encoding.UTF8.GetBytes(connection));
+            bool Matches(string? allowed) => !string.IsNullOrEmpty(allowed) &&
+                CryptographicOperations.FixedTimeEquals(suppliedHash, SHA256.HashData(Encoding.UTF8.GetBytes(allowed)));
+            bool readMatches = Matches(ReadOnlyConnection);
+            bool writeMatches = Matches(WriteConnection);
+            // A writable AL source still supports Query/TestConnection/GetSchema, but its
+            // reads must never open the writable credential carried in its encrypted payload.
+            if (readOnly && (readMatches || writeMatches))
+                return ReadOnlyConnection;
+            if (!readOnly && writeMatches)
+                return WriteConnection!;
+            throw new InvalidOperationException("Connection is not permitted.");
         }
         finally
         {

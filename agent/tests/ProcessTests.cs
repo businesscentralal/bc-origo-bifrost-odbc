@@ -13,7 +13,16 @@ public sealed class ProcessTests
     {
         string path = Path.Combine(Path.GetTempPath(), "XBifrostWorker-" + Guid.NewGuid().ToString("N") + ".db");
         string driver = Environment.GetEnvironmentVariable("BIFROST_TEST_SQLITE_DRIVER") ?? "SQLite3";
-        var settings = PolicyTests.Settings($"Driver={{{driver}}};Database={path}");
+        var fixture = PolicyTests.Settings($"Driver={{{driver}}};Database={path}");
+        // Functional/redaction tests use the production deadline, including cold process startup.
+        // The separate hard-deadline test still explicitly requires termination after one second.
+        var settings = new Settings
+        {
+            AesKey = fixture.AesKey,
+            AesVector = fixture.AesVector,
+            ReadOnlyConnection = fixture.ReadOnlyConnection,
+            MaxRows = fixture.MaxRows
+        };
         var values = new Dictionary<string, string>
         {
             ["BIFROST_ODBC_AES_KEY"] = Convert.ToBase64String(settings.AesKey),
