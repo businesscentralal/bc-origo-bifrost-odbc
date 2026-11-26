@@ -57,6 +57,10 @@ table 10035493 "ODBC Source ori"
             InitValue = 60;
             MinValue = 1;
         }
+        field(11; Transport; Enum "ODBC Transport ori")
+        {
+            Caption = 'Transport', Comment = 'is-IS=Flutningsleið';
+        }
         field(10; "Driver Name"; Text[100])
         {
             Caption = 'Driver / DBMS name', Comment = 'is-IS=Heiti rekils / gagnagrunnskerfis';

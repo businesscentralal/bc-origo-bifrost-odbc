@@ -30,5 +30,9 @@ permissionset 98101 "ODBC Setup Test ori"
         codeunit "ODBC Scaffold Tst ori" = X,
         codeunit "Library Assert" = X,
         codeunit "Library - Lower Permissions" = X,
-        codeunit "Permissions Mock" = X;
+        codeunit "Permissions Mock" = X,
+        codeunit "ODBC Client ori" = X,
+        codeunit "ODBC Reader ori" = X,
+        codeunit "ODBC Mock Transport ori" = X,
+        codeunit "ODBC Client Tst ori" = X;
 }
