@@ -3,6 +3,636 @@
   <file datatype="xml" source-language="en-US" target-language="is-IS" original="Bifrost ODBC">
     <body>
       <group id="body">
+        <trans-unit id="Table 3010982590 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ODBC Blob Container</source>
+          <target>ODBC blob-gámur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC blob-gámur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Blob Container ori - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3010982590 - NamedType 2597726115" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The blob container %1 is used by an ODBC source and cannot be deleted.</source>
+          <target>Blob-gámurinn %1 er notaður af ODBC-uppsprettu og er ekki hægt að eyða honum.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = blob container code; is-IS=Blob-gámurinn %1 er notaður af ODBC-uppsprettu og er ekki hægt að eyða honum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Blob Container ori - NamedType InUseErr</note>
+        </trans-unit>
+        <trans-unit id="Table 3010982590 - Field 2722158932 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Authentication type</source>
+          <target>Auðkenningartegund</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Auðkenningartegund</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Blob Container ori - Field Auth Type - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3010982590 - Field 3004954119 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Code</source>
+          <target>Kóði</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kóði</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Blob Container ori - Field Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3010982590 - Field 2505711900 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Container</source>
+          <target>Gámur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gámur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Blob Container ori - Field Container Name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3010982590 - Field 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <target>Lýsing</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lýsing</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Blob Container ori - Field Description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3010982590 - Field 180641788 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Storage account</source>
+          <target>Geymslureikningur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Geymslureikningur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Blob Container ori - Field Storage Account - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2797263333 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ODBC Relay Connection</source>
+          <target>ODBC relay-tenging</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC relay-tenging</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Relay Connection ori - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2797263333 - NamedType 2597726115" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The relay connection %1 is used by an ODBC source and cannot be deleted.</source>
+          <target>Relay-tengingin %1 er notuð af ODBC-uppsprettu og er ekki hægt að eyða henni.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = relay connection code; is-IS=Relay-tengingin %1 er notuð af ODBC-uppsprettu og er ekki hægt að eyða henni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Relay Connection ori - NamedType InUseErr</note>
+        </trans-unit>
+        <trans-unit id="Table 2797263333 - Field 3004954119 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Code</source>
+          <target>Kóði</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kóði</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Relay Connection ori - Field Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2797263333 - Field 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <target>Lýsing</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lýsing</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Relay Connection ori - Field Description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2797263333 - Field 3064421895 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Hybrid connection name</source>
+          <target>Heiti hybrid-tengingar</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti hybrid-tengingar</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Relay Connection ori - Field Hybrid Connection Name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2797263333 - Field 1086064356 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Azure Relay namespace</source>
+          <target>Azure Relay nafnrými</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Azure Relay nafnrými</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Relay Connection ori - Field Relay Namespace - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2797263333 - Field 1910224835 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>SAS key name</source>
+          <target>Heiti SAS-lykils</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti SAS-lykils</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Relay Connection ori - Field SAS Key Name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2306967109 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ODBC Source</source>
+          <target>ODBC-uppspretta</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC-uppspretta</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Source ori - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2306967109 - Field 102687002 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>AES vector</source>
+          <target>AES-upphafsvigur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=AES-upphafsvigur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Source ori - Field AES Vector - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2306967109 - Field 2531959187 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Blob container</source>
+          <target>Blob-gámur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Blob-gámur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Source ori - Field Blob Container Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2306967109 - Field 3543129988 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Blocked</source>
+          <target>Læst</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Læst</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Source ori - Field Blocked - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2306967109 - Field 3004954119 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Code</source>
+          <target>Kóði</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kóði</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Source ori - Field Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2306967109 - Field 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <target>Lýsing</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lýsing</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Source ori - Field Description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2306967109 - Field 1387240579 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Driver / DBMS name</source>
+          <target>Heiti rekils / gagnagrunnskerfis</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti rekils / gagnagrunnskerfis</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Source ori - Field Driver Name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2306967109 - Field 865398282 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read only</source>
+          <target>Eingöngu lestur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eingöngu lestur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Source ori - Field Read Only - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2306967109 - Field 3232489636 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Relay connection</source>
+          <target>Relay-tenging</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Relay-tenging</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Source ori - Field Relay Connection Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2306967109 - Field 3942966084 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Row cap</source>
+          <target>Hámark lína</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hámark lína</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Source ori - Field Row Cap - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2306967109 - Field 2506375595 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Timeout (s)</source>
+          <target>Tímamörk (sek.)</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tímamörk (sek.)</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Source ori - Field Timeout (s) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 471558038 - NamedType 2017845471" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The blob container %2 of ODBC source %1 does not exist.</source>
+          <target>Blob-gámurinn %2 í ODBC-uppsprettunni %1 er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source code, %2 = blob container code; is-IS=Blob-gámurinn %2 í ODBC-uppsprettunni %1 er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Setup Validation ori - NamedType BlobNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 471558038 - NamedType 3786550694" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The ODBC source %1 has no relay connection.</source>
+          <target>ODBC-uppsprettan %1 hefur enga relay-tengingu.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source code; is-IS=ODBC-uppsprettan %1 hefur enga relay-tengingu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Setup Validation ori - NamedType MissingRelayErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 471558038 - NamedType 314405004" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is missing the value for %2.</source>
+          <target>%1 vantar gildi fyrir %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = record code, %2 = field caption; is-IS=%1 vantar gildi fyrir %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Setup Validation ori - NamedType MissingRelayFieldErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 471558038 - NamedType 1323046097" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is missing the secret "%2".</source>
+          <target>%1 vantar leyndarmálið "%2".</target>
+          <note from="Developer" annotates="general" priority="2">%1 = record code, %2 = secret kind; is-IS=%1 vantar leyndarmálið "%2".</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Setup Validation ori - NamedType MissingSecretErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 471558038 - NamedType 839080511" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The relay connection %2 of ODBC source %1 does not exist.</source>
+          <target>Relay-tengingin %2 í ODBC-uppsprettunni %1 er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source code, %2 = relay connection code; is-IS=Relay-tengingin %2 í ODBC-uppsprettunni %1 er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Setup Validation ori - NamedType RelayNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 471558038 - NamedType 1113848796" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The ODBC source %1 is blocked.</source>
+          <target>ODBC-uppsprettan %1 er læst.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source code; is-IS=ODBC-uppsprettan %1 er læst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Setup Validation ori - NamedType SourceBlockedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 471558038 - NamedType 1672472045" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The ODBC source %1 does not exist.</source>
+          <target>ODBC-uppsprettan %1 er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source code; is-IS=ODBC-uppsprettan %1 er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Setup Validation ori - NamedType SourceNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Page 1957606202 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ODBC Blob Container</source>
+          <target>ODBC blob-gámur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC blob-gámur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Container Card ori - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1957606202 - NamedType 3858632754" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter a code before you set a secret.</source>
+          <target>Sláðu inn kóða áður en þú setur leyndarmál.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sláðu inn kóða áður en þú setur leyndarmál.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Container Card ori - NamedType SaveFirstErr</note>
+        </trans-unit>
+        <trans-unit id="Page 1957606202 - Control 2445482498 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>General</source>
+          <target>Almennt</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Almennt</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Container Card ori - Control General - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1957606202 - Control 2722158932 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies how Business Central authenticates against the container.</source>
+          <target>Tilgreinir hvernig Business Central auðkennir sig gagnvart gámnum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvernig Business Central auðkennir sig gagnvart gámnum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Container Card ori - Control Auth Type - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1957606202 - Control 3004954119 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the code of the blob container.</source>
+          <target>Tilgreinir kóða blob-gámsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir kóða blob-gámsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Container Card ori - Control Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1957606202 - Control 2505711900 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the name of the container.</source>
+          <target>Tilgreinir heiti gámsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir heiti gámsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Container Card ori - Control Container Name - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1957606202 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies a description of the blob container.</source>
+          <target>Tilgreinir lýsingu blob-gámsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir lýsingu blob-gámsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Container Card ori - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1957606202 - Control 2340293650 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether the secret is stored. The secret itself is never shown.</source>
+          <target>Tilgreinir hvort leyndarmálið er geymt. Leyndarmálið sjálft er aldrei sýnt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort leyndarmálið er geymt. Leyndarmálið sjálft er aldrei sýnt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Container Card ori - Control HasSecretField - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1957606202 - Control 2340293650 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Has key</source>
+          <target>Lykill til</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill til</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Container Card ori - Control HasSecretField - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1957606202 - Control 180641788 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the storage account.</source>
+          <target>Tilgreinir geymslureikninginn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir geymslureikninginn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Container Card ori - Control Storage Account - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1957606202 - Action 1175953560 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enters the secret. It is kept in isolated storage and is never shown again.</source>
+          <target>Setur inn leyndarmálið. Það er geymt í einangraðri geymslu og er aldrei sýnt aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Setur inn leyndarmálið. Það er geymt í einangraðri geymslu og er aldrei sýnt aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Container Card ori - Action SetSecret - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1957606202 - Action 1175953560 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Set secret</source>
+          <target>Setja leyndarmál</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Setja leyndarmál</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Container Card ori - Action SetSecret - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 317953931 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ODBC Blob Containers</source>
+          <target>ODBC blob-gámar</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC blob-gámar</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Containers ori - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 317953931 - Control 3004954119 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the code of the blob container.</source>
+          <target>Tilgreinir kóða blob-gámsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir kóða blob-gámsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Containers ori - Control Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 317953931 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies a description of the blob container.</source>
+          <target>Tilgreinir lýsingu blob-gámsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir lýsingu blob-gámsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Containers ori - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 317953931 - Control 180641788 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the storage account.</source>
+          <target>Tilgreinir geymslureikninginn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir geymslureikninginn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Blob Containers ori - Control Storage Account - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3691925257 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ODBC Relay Connection</source>
+          <target>ODBC relay-tenging</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC relay-tenging</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connection Card ori - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3691925257 - NamedType 3858632754" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter a code before you set a secret.</source>
+          <target>Sláðu inn kóða áður en þú setur leyndarmál.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sláðu inn kóða áður en þú setur leyndarmál.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connection Card ori - NamedType SaveFirstErr</note>
+        </trans-unit>
+        <trans-unit id="Page 3691925257 - Control 2445482498 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>General</source>
+          <target>Almennt</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Almennt</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connection Card ori - Control General - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3691925257 - Control 3004954119 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the code of the relay connection.</source>
+          <target>Tilgreinir kóða relay-tengingarinnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir kóða relay-tengingarinnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connection Card ori - Control Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3691925257 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies a description of the relay connection.</source>
+          <target>Tilgreinir lýsingu relay-tengingarinnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir lýsingu relay-tengingarinnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connection Card ori - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3691925257 - Control 2340293650 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether the secret is stored. The secret itself is never shown.</source>
+          <target>Tilgreinir hvort leyndarmálið er geymt. Leyndarmálið sjálft er aldrei sýnt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort leyndarmálið er geymt. Leyndarmálið sjálft er aldrei sýnt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connection Card ori - Control HasSecretField - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3691925257 - Control 2340293650 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Has key</source>
+          <target>Lykill til</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill til</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connection Card ori - Control HasSecretField - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3691925257 - Control 3064421895 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the name of the hybrid connection.</source>
+          <target>Tilgreinir heiti hybrid-tengingarinnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir heiti hybrid-tengingarinnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connection Card ori - Control Hybrid Connection Name - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3691925257 - Control 1086064356 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the Azure Relay namespace.</source>
+          <target>Tilgreinir Azure Relay nafnrýmið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir Azure Relay nafnrýmið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connection Card ori - Control Relay Namespace - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3691925257 - Control 1910224835 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the name of the shared access policy (SAS key).</source>
+          <target>Tilgreinir heiti sameiginlegrar aðgangsstefnu (SAS-lykils).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir heiti sameiginlegrar aðgangsstefnu (SAS-lykils).</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connection Card ori - Control SAS Key Name - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3691925257 - Action 1175953560 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enters the secret. It is kept in isolated storage and is never shown again.</source>
+          <target>Setur inn leyndarmálið. Það er geymt í einangraðri geymslu og er aldrei sýnt aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Setur inn leyndarmálið. Það er geymt í einangraðri geymslu og er aldrei sýnt aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connection Card ori - Action SetSecret - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3691925257 - Action 1175953560 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Set SAS key</source>
+          <target>Setja SAS-lykil</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Setja SAS-lykil</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connection Card ori - Action SetSecret - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3177387996 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ODBC Relay Connections</source>
+          <target>ODBC relay-tengingar</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC relay-tengingar</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connections ori - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3177387996 - Control 3004954119 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the code of the relay connection.</source>
+          <target>Tilgreinir kóða relay-tengingarinnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir kóða relay-tengingarinnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connections ori - Control Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3177387996 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies a description of the relay connection.</source>
+          <target>Tilgreinir lýsingu relay-tengingarinnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir lýsingu relay-tengingarinnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connections ori - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3177387996 - Control 1086064356 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the Azure Relay namespace.</source>
+          <target>Tilgreinir Azure Relay nafnrýmið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir Azure Relay nafnrýmið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Relay Connections ori - Control Relay Namespace - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 217099264 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter Secret</source>
+          <target>Setja inn leyndarmál</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Setja inn leyndarmál</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Secret Entry ori - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 217099264 - Control 1427920047 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the secret to store. It is kept in isolated storage and is never shown again. Leave it empty to remove the stored secret.</source>
+          <target>Tilgreinir leyndarmálið sem á að geyma. Það er geymt í einangraðri geymslu og er aldrei sýnt aftur. Hafðu reitinn auðan til að fjarlægja geymda leyndarmálið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir leyndarmálið sem á að geyma. Það er geymt í einangraðri geymslu og er aldrei sýnt aftur. Hafðu reitinn auðan til að fjarlægja geymda leyndarmálið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Secret Entry ori - Control SecretValue - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 217099264 - Control 1427920047 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Secret</source>
+          <target>Leyndarmál</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leyndarmál</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Secret Entry ori - Control SecretValue - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ODBC Source</source>
+          <target>ODBC-uppspretta</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC-uppspretta</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - NamedType 3858632754" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter a code before you set a secret.</source>
+          <target>Sláðu inn kóða áður en þú setur leyndarmál.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sláðu inn kóða áður en þú setur leyndarmál.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - NamedType SaveFirstErr</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - NamedType 404008934" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The ODBC source is set up completely.</source>
+          <target>ODBC-uppsprettan er fullkomlega uppsett.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC-uppsprettan er fullkomlega uppsett.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - NamedType SetupOkMsg</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 2445482498 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>General</source>
+          <target>Almennt</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Almennt</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control General - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 2531959187 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the optional blob container used for large results.</source>
+          <target>Tilgreinir valkvæma blob-gáminn sem notaður er fyrir stórar niðurstöður.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir valkvæma blob-gáminn sem notaður er fyrir stórar niðurstöður.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control Blob Container Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 3004954119 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the code of the ODBC source.</source>
+          <target>Tilgreinir kóða ODBC-uppsprettunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir kóða ODBC-uppsprettunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies a description of the ODBC source.</source>
+          <target>Tilgreinir lýsingu ODBC-uppsprettunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir lýsingu ODBC-uppsprettunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 1387240579 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the driver or database system name reported by the last connection test.</source>
+          <target>Tilgreinir heiti rekils eða gagnagrunnskerfis úr síðustu tengiprófun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir heiti rekils eða gagnagrunnskerfis úr síðustu tengiprófun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control Driver Name - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 3232489636 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the relay connection used to reach the source.</source>
+          <target>Tilgreinir relay-tenginguna sem notuð er til að ná í uppsprettuna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir relay-tenginguna sem notuð er til að ná í uppsprettuna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control Relay Connection Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 2333062506 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Access and limits</source>
+          <target>Aðgangur og takmarkanir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðgangur og takmarkanir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control Limits - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 3543129988 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies that the source is blocked and cannot be used.</source>
+          <target>Tilgreinir að uppsprettan sé læst og ekki hægt að nota hana.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir að uppsprettan sé læst og ekki hægt að nota hana.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control Blocked - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 865398282 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies that the source can only be read. Statements that change data are refused.</source>
+          <target>Tilgreinir að aðeins sé hægt að lesa uppsprettuna. Skipunum sem breyta gögnum er hafnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir að aðeins sé hægt að lesa uppsprettuna. Skipunum sem breyta gögnum er hafnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control Read Only - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 3942966084 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the maximum number of rows a query returns.</source>
+          <target>Tilgreinir hámarksfjölda lína sem fyrirspurn skilar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hámarksfjölda lína sem fyrirspurn skilar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control Row Cap - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 2506375595 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the number of seconds before a query times out.</source>
+          <target>Tilgreinir fjölda sekúndna áður en fyrirspurn rennur út á tíma.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir fjölda sekúndna áður en fyrirspurn rennur út á tíma.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control Timeout (s) - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 330024935 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Secrets</source>
+          <target>Leyndarmál</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leyndarmál</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control Secrets - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 102687002 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the AES initialization vector. It is not secret.</source>
+          <target>Tilgreinir AES-upphafsvigurinn. Hann er ekki leynilegur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir AES-upphafsvigurinn. Hann er ekki leynilegur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control AES Vector - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 1829576918 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether an AES key is stored. It is never shown.</source>
+          <target>Tilgreinir hvort AES-lykill er geymdur. Hann er aldrei sýndur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort AES-lykill er geymdur. Hann er aldrei sýndur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control HasAesKey - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 1829576918 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Has AES key</source>
+          <target>AES-lykill til</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=AES-lykill til</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control HasAesKey - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 1778090803 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether a connection string or DSN is stored. It is never shown.</source>
+          <target>Tilgreinir hvort tengistrengur eða DSN er geymt. Það er aldrei sýnt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort tengistrengur eða DSN er geymt. Það er aldrei sýnt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control HasConnectionString - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 1778090803 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Has connection string</source>
+          <target>Tengistrengur til</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tengistrengur til</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control HasConnectionString - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Action 3554709342 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enters the AES key. It is kept in isolated storage and is never shown again.</source>
+          <target>Setur inn AES-lykilinn. Hann er geymdur í einangraðri geymslu og er aldrei sýndur aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Setur inn AES-lykilinn. Hann er geymdur í einangraðri geymslu og er aldrei sýndur aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Action SetAesKey - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Action 3554709342 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Set AES key</source>
+          <target>Setja AES-lykil</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Setja AES-lykil</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Action SetAesKey - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Action 4045583451 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enters the connection string or DSN. It is kept in isolated storage and is never shown again.</source>
+          <target>Setur inn tengistreng eða DSN. Það er geymt í einangraðri geymslu og er aldrei sýnt aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Setur inn tengistreng eða DSN. Það er geymt í einangraðri geymslu og er aldrei sýnt aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Action SetConnectionString - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Action 4045583451 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Set connection string</source>
+          <target>Setja tengistreng</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Setja tengistreng</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Action SetConnectionString - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Action 2570329715 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Checks that the source is not blocked and that the relay connection and all secrets are set.</source>
+          <target>Athugar að uppsprettan sé ekki læst og að relay-tenging og öll leyndarmál séu til staðar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugar að uppsprettan sé ekki læst og að relay-tenging og öll leyndarmál séu til staðar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Action ValidateSetup - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Action 2570329715 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Validate setup</source>
+          <target>Sannreyna uppsetningu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sannreyna uppsetningu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Action ValidateSetup - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 4002211836 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ODBC Sources</source>
+          <target>ODBC-uppsprettur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC-uppsprettur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Sources ori - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 4002211836 - Control 3543129988 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies that the source is blocked.</source>
+          <target>Tilgreinir að uppsprettan sé læst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir að uppsprettan sé læst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Sources ori - Control Blocked - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4002211836 - Control 3004954119 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the code of the ODBC source.</source>
+          <target>Tilgreinir kóða ODBC-uppsprettunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir kóða ODBC-uppsprettunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Sources ori - Control Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4002211836 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies a description of the ODBC source.</source>
+          <target>Tilgreinir lýsingu ODBC-uppsprettunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir lýsingu ODBC-uppsprettunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Sources ori - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4002211836 - Control 865398282 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies that the source can only be read.</source>
+          <target>Tilgreinir að aðeins sé hægt að lesa uppsprettuna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir að aðeins sé hægt að lesa uppsprettuna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Sources ori - Control Read Only - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4002211836 - Control 3232489636 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the relay connection used to reach the source.</source>
+          <target>Tilgreinir relay-tenginguna sem notuð er til að ná í uppsprettuna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir relay-tenginguna sem notuð er til að ná í uppsprettuna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Sources ori - Control Relay Connection Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Enum 475453119 - EnumValue 607187570 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Account key</source>
+          <target>Aðgangslykill reiknings</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðgangslykill reiknings</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum ODBC Blob Auth Type ori - EnumValue AccountKey - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 475453119 - EnumValue 3398022750 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>SAS token</source>
+          <target>SAS-tóki</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=SAS-tóki</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum ODBC Blob Auth Type ori - EnumValue SasToken - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 256748268 - EnumValue 888627004 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>AES key</source>
+          <target>AES-lykill</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=AES-lykill</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum ODBC Secret Kind ori - EnumValue AesKey - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 256748268 - EnumValue 527687175 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Blob container secret</source>
+          <target>Leyndarmál blob-gáms</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leyndarmál blob-gáms</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum ODBC Secret Kind ori - EnumValue BlobSecret - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 256748268 - EnumValue 3746075805 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Connection string or DSN</source>
+          <target>Tengistrengur eða DSN</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tengistrengur eða DSN</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum ODBC Secret Kind ori - EnumValue ConnectionString - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 256748268 - EnumValue 680490935 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Relay SAS key</source>
+          <target>SAS-lykill relay</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=SAS-lykill relay</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum ODBC Secret Kind ori - EnumValue RelaySasKey - Property Caption</note>
+        </trans-unit>
         <trans-unit id="PermissionSet 3039526947 - Property 2879900210" maxwidth="30" size-unit="char" translate="yes" xml:space="preserve">
           <source>Bifrost ODBC</source>
           <target>Bifröst - ODBC</target>
