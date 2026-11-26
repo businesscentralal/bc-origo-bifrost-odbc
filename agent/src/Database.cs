@@ -77,6 +77,11 @@ public sealed class Database(Settings settings)
         var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToArray();
         if (columns.Distinct(StringComparer.Ordinal).Count() != columns.Length)
             throw new InvalidOperationException("Column aliases must be unique.");
+        using var schema = reader.GetSchemaTable();
+        var dateColumns = schema != null && schema.Columns.Contains("ProviderType")
+            ? schema.Rows.Cast<DataRow>().Select(column => column["ProviderType"] != DBNull.Value &&
+                (OdbcType)Convert.ToInt32(column["ProviderType"], CultureInfo.InvariantCulture) == OdbcType.Date).ToArray()
+            : new bool[reader.FieldCount];
         var rows = new List<Dictionary<string, object?>>();
         long bytes = 0;
         while (rows.Count < cap && reader.Read())
@@ -85,6 +90,10 @@ public sealed class Database(Settings settings)
             for (int i = 0; i < columns.Length; i++)
             {
                 object? value = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                // BC JsonValue.AsDate accepts yyyy-MM-dd, while timestamps must retain their time.
+                // Use the ODBC provider type: e.g. Oracle DATE can actually be a timestamp.
+                if (value is DateTime date && dateColumns[i])
+                    value = date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                 // Binary values remain transportable, while dates/numbers retain JSON types.
                 row.Add(columns[i], value);
                 bytes += JsonSerializer.SerializeToUtf8Bytes(value, Protocol.Json).Length + columns[i].Length * 6L + 8;

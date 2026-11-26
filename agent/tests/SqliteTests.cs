@@ -23,6 +23,33 @@ public sealed class SqliteTests : IDisposable
         command.ExecuteNonQuery();
         command.CommandText = "INSERT INTO XRows VALUES (1, 'XFirst'), (2, 'XSecond'), (3, NULL), (4, 'XFourth')";
         command.ExecuteNonQuery();
+        command.CommandText = "CREATE TABLE XDates (Day DATE, Stamp TIMESTAMP)";
+        command.ExecuteNonQuery();
+        command.CommandText = "INSERT INTO XDates VALUES ('2026-11-25', '2026-11-25 10:11:12')";
+        command.ExecuteNonQuery();
+    }
+
+    [Theory]
+    [InlineData("en-US")]
+    [InlineData("is-IS")]
+    public void NativeDateAndTimestampMatchBcTypedReaderFormats(string culture)
+    {
+        var previous = System.Globalization.CultureInfo.CurrentCulture;
+        var previousUi = System.Globalization.CultureInfo.CurrentUICulture;
+        try
+        {
+            System.Globalization.CultureInfo.CurrentCulture = new(culture);
+            System.Globalization.CultureInfo.CurrentUICulture = new(culture);
+            using var result = Run(PolicyTests.Request(settings, sql: "SELECT Day, Stamp FROM XDates", parameters: "[]"));
+            var row = result.RootElement.GetProperty("rows")[0];
+            Assert.Equal("2026-11-25", row.GetProperty("Day").GetString());
+            Assert.Equal("2026-11-25T10:11:12", row.GetProperty("Stamp").GetString());
+        }
+        finally
+        {
+            System.Globalization.CultureInfo.CurrentCulture = previous;
+            System.Globalization.CultureInfo.CurrentUICulture = previousUi;
+        }
     }
 
     [Theory]
