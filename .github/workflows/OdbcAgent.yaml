@@ -1,7 +1,9 @@
-name: ODBC agent (Windows)
+name: ODBC agent
 
-# Builds and tests the Bifröst ODBC local agent (agent/, a .NET 8 Windows service) on Windows.
-# Unsigned in PR builds, like the AL PR builds; signing happens at release (agent/Package-SignedAgent.ps1). Issue #13.
+# Builds and tests the Bifröst ODBC local agent (agent/, .NET 8). Issue #13.
+# Tests run on Linux with the SQLite ODBC driver from Ubuntu's signed package repository (same setup the workers use).
+# The Windows service is published as an unsigned self-contained win-x64 folder; signing happens at release
+# (agent/Package-SignedAgent.ps1), like the unsigned AL PR builds.
 
 on:
   pull_request:
@@ -23,10 +25,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-test:
-    name: Build and test the ODBC agent
-    runs-on: windows-latest
-    timeout-minutes: 30
+  test:
+    name: Test the ODBC agent (Linux, SQLite ODBC)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,37 +38,59 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install the SQLite ODBC driver (agent tests use a real ODBC driver)
-        shell: pwsh
+      - name: Install unixODBC and the SQLite ODBC driver
         run: |
-          choco install sqliteodbc --no-progress -y
-          if ($LASTEXITCODE -ne 0) { throw 'SQLite ODBC driver install failed.' }
-          $drivers = Get-OdbcDriver -Platform 64-bit | Where-Object Name -like 'SQLite3*' | Select-Object -ExpandProperty Name
-          if (-not $drivers) { throw 'SQLite3 ODBC driver is not registered (64-bit).' }
-          Write-Output "ODBC drivers: $($drivers -join ', ')"
-          "BIFROST_TEST_SQLITE_DRIVER=$(@($drivers)[0])" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq unixodbc libsqliteodbc
+          odbcinst -q -d
 
-      - name: Build, test and publish (unsigned)
+      - name: Build and test (Build-Agent.ps1, linux-x64)
         shell: pwsh
-        run: ./agent/Build-Agent.ps1 -Runtime win-x64 -OutputDirectory "$env:RUNNER_TEMP/agent-out"
+        env:
+          BIFROST_TEST_SQLITE_DRIVER: SQLite3
+        run: ./agent/Build-Agent.ps1 -Runtime linux-x64 -OutputDirectory "$env:RUNNER_TEMP/agent-out"
 
-      - name: Checksums
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: odbc-agent-test-results-${{ github.sha }}
+          path: ${{ runner.temp }}/agent-out/tests
+          if-no-files-found: warn
+          retention-days: 30
+
+  publish-windows:
+    name: Publish the Windows agent (win-x64, unsigned)
+    needs: test
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish (unsigned)
         shell: pwsh
         run: |
           $out = Join-Path $env:RUNNER_TEMP 'agent-out'
-          Get-ChildItem -LiteralPath (Join-Path $out 'win-x64') -File -Recurse |
-            Sort-Object FullName |
+          dotnet publish agent/src/Bifrost.Odbc.Agent.csproj --configuration Release --runtime win-x64 --self-contained true --output (Join-Path $out 'win-x64')
+          if ($LASTEXITCODE -ne 0) { throw 'Agent publish failed.' }
+          @{ sourceSha = '${{ github.sha }}'; runtime = 'win-x64'; signed = $false } | ConvertTo-Json |
+            Set-Content -LiteralPath (Join-Path $out 'win-x64/build.json') -Encoding utf8
+          Get-ChildItem -LiteralPath (Join-Path $out 'win-x64') -File -Recurse | Sort-Object FullName |
             ForEach-Object { '{0}  {1}' -f (Get-FileHash -Algorithm SHA256 -LiteralPath $_.FullName).Hash.ToLowerInvariant(), $_.FullName.Substring($out.Length + 1).Replace('\', '/') } |
             Set-Content -LiteralPath (Join-Path $out 'SHA256SUMS.txt') -Encoding utf8
 
-      - name: Upload agent (unsigned), checksums and test results
-        if: always()
+      - name: Upload agent (unsigned) and checksums
         uses: actions/upload-artifact@v4
         with:
           name: odbc-agent-win-x64-unsigned-${{ github.sha }}
           path: |
             ${{ runner.temp }}/agent-out/win-x64
             ${{ runner.temp }}/agent-out/SHA256SUMS.txt
-            ${{ runner.temp }}/agent-out/tests
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 30
