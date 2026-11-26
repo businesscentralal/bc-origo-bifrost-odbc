@@ -64,7 +64,8 @@ codeunit 10035501 "ODBC Secret Mgt ori"
     [NonDebuggable]
     procedure GetSecret(OwnerId: Guid; SecretKind: Enum "ODBC Secret Kind ori") Value: SecretText
     begin
-        IsolatedStorage.Get(StorageKey(OwnerId, SecretKind), DataScope::Company, Value);
+        if not IsolatedStorage.Get(StorageKey(OwnerId, SecretKind), DataScope::Company, Value) then
+            Clear(Value);
     end;
 
     /// <summary>Removes stored secrets from an untrusted diagnostic before it can leave the app.</summary>
@@ -110,7 +111,8 @@ codeunit 10035501 "ODBC Secret Mgt ori"
     local procedure GetSecretText(OwnerId: Guid; SecretKind: Enum "ODBC Secret Kind ori") Value: Text
     begin
         // Plain text is confined to encryption and redaction inside this non-debuggable codeunit.
-        IsolatedStorage.Get(StorageKey(OwnerId, SecretKind), DataScope::Company, Value);
+        if not IsolatedStorage.Get(StorageKey(OwnerId, SecretKind), DataScope::Company, Value) then
+            Clear(Value);
     end;
 
     [NonDebuggable]
@@ -123,7 +125,7 @@ codeunit 10035501 "ODBC Secret Mgt ori"
 
     local procedure StorageKey(OwnerId: Guid; SecretKind: Enum "ODBC Secret Kind ori"): Text
     begin
-        exit(StrSubstNo(KeyTok, Format(OwnerId, 0, 4), SecretKind.AsInteger()));
+        exit(StrSubstNo(KeyTok, DelChr(Format(OwnerId), '=', '{}'), SecretKind.AsInteger()));
     end;
 
     var
