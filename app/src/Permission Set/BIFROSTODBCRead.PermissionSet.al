@@ -24,5 +24,9 @@ permissionset 10035488 "BIFROST ODBCRead ori"
         page "ODBC Sources ori" = X,
         page "ODBC Secret Entry ori" = X,
         codeunit "ODBC Secret Mgt ori" = X,
-        codeunit "ODBC Setup Validation ori" = X;
+        codeunit "ODBC Setup Validation ori" = X,
+        codeunit "ODBC Client ori" = X,
+        codeunit "ODBC Reader ori" = X,
+        codeunit "ODBC Relay Transport ori" = X,
+        codeunit "ODBC Blob Transport ori" = X;
 }

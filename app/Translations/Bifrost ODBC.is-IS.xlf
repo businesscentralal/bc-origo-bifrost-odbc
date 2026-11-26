@@ -153,6 +153,78 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Tímamörk (sek.)</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Source ori - Field Timeout (s) - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 2306967109 - Field 714498981 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Transport</source>
+          <target>Flutningsleið</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Flutningsleið</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Source ori - Field Transport - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3337392626 - NamedType 721392426" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The ODBC blob transfer failed. Check the container configuration.</source>
+          <target>ODBC blob-flutningur mistókst. Athugaðu uppsetningu gámsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC blob-flutningur mistókst. Athugaðu uppsetningu gámsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Blob Transport ori - NamedType BlobErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 518279145 - NamedType 2154092408" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The ODBC agent reported: %1</source>
+          <target>ODBC-miðlarinn tilkynnti: %1</target>
+          <note from="Developer" annotates="general" priority="2">%1 = redacted agent message; is-IS=ODBC-miðlarinn tilkynnti: %1</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Client ori - NamedType AgentErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 518279145 - NamedType 2039475378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enter a non-empty ODBC SQL statement.</source>
+          <target>Sláðu inn ODBC SQL-setningu sem er ekki tóm.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sláðu inn ODBC SQL-setningu sem er ekki tóm.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Client ori - NamedType EmptySqlErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 518279145 - NamedType 326562022" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The ODBC row cap and timeout must be positive.</source>
+          <target>Hámark ODBC-lína og tímamörk verða að vera jákvæð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hámark ODBC-lína og tímamörk verða að vera jákvæð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Client ori - NamedType InvalidLimitsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 518279145 - NamedType 232778209" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The ODBC agent returned an invalid response.</source>
+          <target>ODBC-miðlarinn skilaði ógildu svari.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC-miðlarinn skilaði ógildu svari.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Client ori - NamedType InvalidResponseErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 518279145 - NamedType 534126485" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The ODBC source %1 is read only. Execute is not allowed.</source>
+          <target>ODBC-uppsprettan %1 er eingöngu til lestrar. Execute er ekki leyft.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source code; is-IS=ODBC-uppsprettan %1 er eingöngu til lestrar. Execute er ekki leyft.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Client ori - NamedType ReadOnlyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3843028437 - NamedType 545819735" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The ODBC agent returned an invalid row result.</source>
+          <target>ODBC-miðlarinn skilaði ógildri línuniðurstöðu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC-miðlarinn skilaði ógildri línuniðurstöðu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Reader ori - NamedType InvalidRowsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3843028437 - NamedType 3182035497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The ODBC result has no column named %1.</source>
+          <target>ODBC-niðurstaðan hefur engan dálk sem heitir %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = column; is-IS=ODBC-niðurstaðan hefur engan dálk sem heitir %1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Reader ori - NamedType MissingColumnErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3843028437 - NamedType 195447682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Call Read successfully before reading an ODBC value.</source>
+          <target>Kallaðu á Read með árangri áður en ODBC-gildi er lesið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallaðu á Read með árangri áður en ODBC-gildi er lesið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Reader ori - NamedType NoRowErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 696498178 - NamedType 2775744567" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The ODBC request completed but temporary blob cleanup failed.</source>
+          <target>ODBC-beiðninni lauk en hreinsun tímabundinna blob-gagna mistókst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC-beiðninni lauk en hreinsun tímabundinna blob-gagna mistókst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Relay Transport ori - NamedType CleanupErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 696498178 - NamedType 3209468314" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The ODBC relay request failed. Check the relay, agent and timeout settings.</source>
+          <target>ODBC relay-beiðni mistókst. Athugaðu relay, miðlara og tímamörk.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC relay-beiðni mistókst. Athugaðu relay, miðlara og tímamörk.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Relay Transport ori - NamedType TransportErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 471558038 - NamedType 2017845471" size-unit="char" translate="yes" xml:space="preserve">
           <source>The blob container %2 of ODBC source %1 does not exist.</source>
           <target>Blob-gámurinn %2 í ODBC-uppsprettunni %1 er ekki til.</target>
@@ -459,6 +531,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir relay-tenginguna sem notuð er til að ná í uppsprettuna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control Relay Connection Code - Property ToolTip</note>
         </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 714498981 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the transport implementation used to reach the ODBC source.</source>
+          <target>Tilgreinir flutningsleiðina sem notuð er til að ná í ODBC-uppsprettuna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir flutningsleiðina sem notuð er til að ná í ODBC-uppsprettuna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control Transport - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="Page 4203541481 - Control 2333062506 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Access and limits</source>
           <target>Aðgangur og takmarkanir</target>
@@ -632,6 +710,12 @@
           <target>SAS-lykill relay</target>
           <note from="Developer" annotates="general" priority="2">is-IS=SAS-lykill relay</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum ODBC Secret Kind ori - EnumValue RelaySasKey - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 1870301751 - EnumValue 2020168853 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Relay</source>
+          <target>Relay</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Relay</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum ODBC Transport ori - EnumValue Relay - Property Caption</note>
         </trans-unit>
         <trans-unit id="PermissionSet 3039526947 - Property 2879900210" maxwidth="30" size-unit="char" translate="yes" xml:space="preserve">
           <source>Bifrost ODBC</source>

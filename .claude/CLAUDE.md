@@ -35,6 +35,15 @@ Tests: 98100-98199 (workbook sheet Test App Ranges, row 99014)
 | Codeunit | 10035502 | ODBC Setup Validation ori |
 | Page | 10035503 | ODBC Secret Entry ori |
 | Enum | 10035504 | ODBC Secret Kind ori |
+| Codeunit | 10035506 | ODBC Client ori |
+| Codeunit | 10035507 | ODBC Reader ori |
+| Interface | (no ID) | ODBC Transport ori |
+| Enum | 10035508 | ODBC Transport ori |
+| Codeunit | 10035509 | ODBC Relay Transport ori |
+| Codeunit | 10035510 | ODBC Blob Transport ori |
+| Test codeunit | 98120 | ODBC Client Tst ori |
+| Test enum extension | 98121 | ODBC Mock Transport ori |
+| Test codeunit | 98122 | ODBC Mock Transport ori |
 | Test codeunit | 98102 | ODBC Setup Tst ori |
 | Test codeunit | 98100 | ODBC Scaffold Tst ori |
 | Test permission set | 98101 | ODBC Setup Test ori |

@@ -26,6 +26,10 @@ page 10035498 "ODBC Source Card ori"
                 {
                     ToolTip = 'Specifies a description of the ODBC source.', Comment = 'is-IS=Tilgreinir lýsingu ODBC-uppsprettunnar.';
                 }
+                field(Transport; Rec.Transport)
+                {
+                    ToolTip = 'Specifies the transport implementation used to reach the ODBC source.', Comment = 'is-IS=Tilgreinir flutningsleiðina sem notuð er til að ná í ODBC-uppsprettuna.';
+                }
                 field("Relay Connection Code"; Rec."Relay Connection Code")
                 {
                     ToolTip = 'Specifies the relay connection used to reach the source.', Comment = 'is-IS=Tilgreinir relay-tenginguna sem notuð er til að ná í uppsprettuna.';
@@ -156,8 +160,8 @@ page 10035498 "ODBC Source Card ori"
 
     local procedure EnterSecret(SecretKind: Enum "ODBC Secret Kind ori")
     var
-        SecretEntry: Page "ODBC Secret Entry ori";
         SecretMgt: Codeunit "ODBC Secret Mgt ori";
+        SecretEntry: Page "ODBC Secret Entry ori";
     begin
         CurrPage.SaveRecord();
         if Rec.Code = '' then

@@ -57,9 +57,73 @@ codeunit 10035501 "ODBC Secret Mgt ori"
         end;
     end;
 
+    /// <summary>Reads a secret for the internal transport only.</summary>
+    /// <param name="OwnerId">Owner of the secret.</param>
+    /// <param name="SecretKind">Kind of secret.</param>
+    /// <returns>The secret without exposing plain text.</returns>
+    [NonDebuggable]
+    procedure GetSecret(OwnerId: Guid; SecretKind: Enum "ODBC Secret Kind ori") Value: SecretText
+    begin
+        IsolatedStorage.Get(StorageKey(OwnerId, SecretKind), DataScope::Company, Value);
+    end;
+
+    /// <summary>Removes stored secrets from an untrusted diagnostic before it can leave the app.</summary>
+    /// <param name="Source">Source whose secrets must be removed.</param>
+    /// <param name="Message">Untrusted diagnostic.</param>
+    /// <returns>A diagnostic with secret values removed.</returns>
+    [NonDebuggable]
+    procedure Redact(Source: Record "ODBC Source ori"; Message: Text): Text
+    var
+        Relay: Record "ODBC Relay Connection ori";
+        Blob: Record "ODBC Blob Container ori";
+        Kind: Enum "ODBC Secret Kind ori";
+        Ordinal: Integer;
+    begin
+        foreach Ordinal in Kind.Ordinals() do begin
+            Kind := Enum::"ODBC Secret Kind ori".FromInteger(Ordinal);
+            Message := RedactValue(Message, GetSecretText(Source.SystemId, Kind));
+            if Relay.Get(Source."Relay Connection Code") then
+                Message := RedactValue(Message, GetSecretText(Relay.SystemId, Kind));
+            if Blob.Get(Source."Blob Container Code") then
+                Message := RedactValue(Message, GetSecretText(Blob.SystemId, Kind));
+        end;
+        exit(Message);
+    end;
+
+    /// <summary>Encrypts a stored connection string to wire-format base64 without exposing it to callers.</summary>
+    /// <param name="Source">Source with base64 AES key and vector.</param>
+    /// <returns>AES-CBC/PKCS7 ciphertext only.</returns>
+    [NonDebuggable]
+    procedure EncryptConnection(Source: Record "ODBC Source ori"): Text
+    var
+        Cipher: Codeunit System.Security.Encryption."Rijndael Cryptography";
+    begin
+        Cipher.InitRijndaelProvider();
+        Cipher.SetBlockSize(128);
+        Cipher.SetCipherMode('CBC');
+        Cipher.SetPaddingMode('PKCS7');
+        Cipher.SetEncryptionData(GetSecret(Source.SystemId, Enum::"ODBC Secret Kind ori"::AesKey), Source."AES Vector");
+        exit(Cipher.Encrypt(GetSecretText(Source.SystemId, Enum::"ODBC Secret Kind ori"::ConnectionString)));
+    end;
+
+    [NonDebuggable]
+    local procedure GetSecretText(OwnerId: Guid; SecretKind: Enum "ODBC Secret Kind ori") Value: Text
+    begin
+        // Plain text is confined to encryption and redaction inside this non-debuggable codeunit.
+        IsolatedStorage.Get(StorageKey(OwnerId, SecretKind), DataScope::Company, Value);
+    end;
+
+    [NonDebuggable]
+    local procedure RedactValue(Message: Text; Value: Text): Text
+    begin
+        if Value <> '' then
+            exit(Message.Replace(Value, '[redacted]'));
+        exit(Message);
+    end;
+
     local procedure StorageKey(OwnerId: Guid; SecretKind: Enum "ODBC Secret Kind ori"): Text
     begin
-        exit(StrSubstNo(KeyTok, DelChr(Format(OwnerId), '=', '{}'), SecretKind.AsInteger()));
+        exit(StrSubstNo(KeyTok, Format(OwnerId, 0, 4), SecretKind.AsInteger()));
     end;
 
     var

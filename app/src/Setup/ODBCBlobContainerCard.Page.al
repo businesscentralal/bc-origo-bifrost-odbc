@@ -88,8 +88,8 @@ page 10035496 "ODBC Blob Container Card ori"
 
     local procedure EnterSecret()
     var
-        SecretEntry: Page "ODBC Secret Entry ori";
         SecretMgt: Codeunit "ODBC Secret Mgt ori";
+        SecretEntry: Page "ODBC Secret Entry ori";
     begin
         CurrPage.SaveRecord();
         if Rec.Code = '' then
