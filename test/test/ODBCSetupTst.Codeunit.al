@@ -425,6 +425,8 @@ codeunit 98102 "ODBC Setup Tst ori"
         Mock.Reset();
         Mock.SetResponse('{"driverName":"Mock ODBC","dbmsName":"MockDB","dbmsVersion":"1.0"}');
         Request.Add('source', SourceCodeTok);
+        TempArgument.Init();
+        TempArgument.Insert();
         TempArgument.SetRequestJson(Request);
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
@@ -432,8 +434,6 @@ codeunit 98102 "ODBC Setup Tst ori"
         CanRead := TestSource.ReadPermission() and RelayConnection.ReadPermission();
         CanEdit := TestSource.WritePermission() or RelayConnection.WritePermission();
         Assert.IsTrue(TestSource.Get(SourceCodeTok), 'The Read role must read the source.');
-        TestSource.Blocked := true;
-        asserterror TestSource.Modify();
         // [WHEN] The read role invokes the identity cache through the message handler.
         // Direct handler call isolates table permission checks from Foundation dispatch permissions.
         Handler.Execute(Enum::"Message Type ori"::"ODBC.Source.Test", TempArgument);
@@ -444,9 +444,9 @@ codeunit 98102 "ODBC Setup Tst ori"
         Assert.AreEqual('MockDB', TestSource."DBMS Name", 'Read-role test caches DBMS');
         Assert.IsTrue(TestSource."Read Only", 'Cache preserves read-only control');
         Assert.IsFalse(TestSource.Blocked, 'Cache preserves blocked control');
-        TestSource."Read Only" := false;
-        asserterror TestSource.Modify();
         Assert.IsFalse(TestSource.WritePermission(), 'Cache grants no write permission to its caller');
+        TestSource.Blocked := true;
+        asserterror TestSource.Modify();
         LowerPermissions.SetOutsideO365Scope();
         Mock.Reset();
         GlobalLanguage(PreviousLanguage);

@@ -77,21 +77,29 @@ codeunit 10035501 "ODBC Secret Mgt ori"
     var
         Result: Text;
     begin
-        // Diagnostic limits do not apply to successful query/schema data.
-        if StrLen(Message) > 256 then
+        // Never truncate an untrusted diagnostic: truncation might expose part of a longer secret.
+        if StrLen(Message) > MaxScanLength() then
             exit(SafeDiagnosticErr);
-        Result := RedactValue(Source, Message);
+        Result := RemoveSecrets(Source, Message);
+        // Partial connection-string fields and URLs are not safe diagnostics either.
         if Result.Contains('=') or Result.Contains('://') then
             exit(SafeDiagnosticErr);
         exit(Result);
     end;
 
-    /// <summary>Removes exact stored secrets while preserving ordinary result text, including URLs and long values.</summary>
-    /// <param name="Source">Source and related setup owning the secrets.</param>
-    /// <param name="Message">Untrusted result text.</param>
-    /// <returns>The original value with each complete secret replaced, without diagnostic heuristics or truncation.</returns>
+    /// <summary>Removes every exact stored secret from a data value and returns all other content unchanged.</summary>
+    /// <remarks>Unlike Redact, data values keep URLs, key=value text and long text; only stored secrets become [redacted].</remarks>
+    /// <param name="Source">Source whose secrets must be removed.</param>
+    /// <param name="Value">Data value returned by the agent (cell, column, catalogue or identity text).</param>
+    /// <returns>The value with each exact stored secret replaced by [redacted].</returns>
     [NonDebuggable]
-    procedure RedactValue(Source: Record "ODBC Source ori"; Message: Text): Text
+    procedure RedactValue(Source: Record "ODBC Source ori"; Value: Text): Text
+    begin
+        exit(RemoveSecrets(Source, Value));
+    end;
+
+    [NonDebuggable]
+    local procedure RemoveSecrets(Source: Record "ODBC Source ori"; Message: Text): Text
     var
         Relay: Record "ODBC Relay Connection ori";
         Blob: Record "ODBC Blob Container ori";
@@ -106,6 +114,8 @@ codeunit 10035501 "ODBC Secret Mgt ori"
         Result: Text;
         CandidateSecret: SecretText;
     begin
+        if Message = '' then
+            exit(Message);
         foreach Ordinal in Kind.Ordinals() do begin
             Kind := Enum::"ODBC Secret Kind ori".FromInteger(Ordinal);
             AddFingerprint(GetSecret(Source.SystemId, Kind), Fingerprints);
@@ -116,9 +126,14 @@ codeunit 10035501 "ODBC Secret Mgt ori"
         end;
         if Fingerprints.Count() = 0 then
             exit(Message);
+        // A value that is exactly a stored secret of any length is always removed.
+        CandidateSecret := Message;
+        if Fingerprints.Contains(Cryptography.GenerateHashAsBase64String('ODBC diagnostic comparison v1', CandidateSecret, 2)) then
+            exit(RedactedTok);
         StartIndex := 1;
         while StartIndex <= StrLen(Message) do begin
             MatchLength := 0;
+            // Scan the complete value: stored secrets may themselves exceed the diagnostic limit.
             // HMAC equality compares secret keys without obtaining their plaintext or length.
             for EndIndex := StrLen(Message) downto StartIndex do
                 if MatchLength = 0 then begin
@@ -128,7 +143,7 @@ codeunit 10035501 "ODBC Secret Mgt ori"
                         MatchLength := EndIndex - StartIndex + 1;
                 end;
             if MatchLength > 0 then begin
-                Result += '[redacted]';
+                Result += RedactedTok;
                 StartIndex += MatchLength;
             end else begin
                 Result += CopyStr(Message, StartIndex, 1);
@@ -136,6 +151,11 @@ codeunit 10035501 "ODBC Secret Mgt ori"
             end;
         end;
         exit(Result);
+    end;
+
+    local procedure MaxScanLength(): Integer
+    begin
+        exit(256);
     end;
 
     [NonDebuggable]
@@ -171,4 +191,5 @@ codeunit 10035501 "ODBC Secret Mgt ori"
     var
         SafeDiagnosticErr: Label 'The ODBC request failed. The agent diagnostic contained sensitive or oversized content.', Comment = 'is-IS=ODBC-beiðni mistókst. Greining miðlarans innihélt viðkvæmt eða of stórt efni.';
         KeyTok: Label 'ODBC-%1-%2', Locked = true;
+        RedactedTok: Label '[redacted]', Locked = true;
 }

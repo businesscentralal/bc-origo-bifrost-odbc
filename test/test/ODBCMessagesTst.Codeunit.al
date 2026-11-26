@@ -600,6 +600,9 @@ codeunit 98140 "ODBC Messages Tst ori"
     local procedure VerifyResultValues()
     var
         Source: Record "ODBC Source ori";
+        Relay: Record "ODBC Relay Connection ori";
+        Secrets: Codeunit "ODBC Secret Mgt ori";
+        LongSecret: SecretText;
         Reply: JsonObject;
         Payload: JsonObject;
         Row: JsonObject;
@@ -658,6 +661,22 @@ codeunit 98140 "ODBC Messages Tst ori"
                 Assert.AreEqual('driver=value', Item.AsObject().GetText('driverName'), 'Cached driver preserved');
                 Assert.AreEqual('https://public.invalid/db', Item.AsObject().GetText('dbmsName'), 'Cached DBMS preserved');
             end;
+        // [GIVEN] An embedded stored secret that is itself longer than the diagnostic bound.
+        Relay.Get(Source."Relay Connection Code");
+        LongSecret := LongText;
+        Secrets.SetSecret(Relay.SystemId, Enum::"ODBC Secret Kind ori"::RelaySasKey, LongSecret);
+        Clear(Payload);
+        Clear(Row);
+        Clear(Rows);
+        Row.Add('longSecret', 'prefix ' + LongText + ' suffix');
+        Rows.Add(Row);
+        Payload.Add('rows', Rows);
+        Payload.WriteTo(Body);
+        Mock.SetResponse(Body);
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT id FROM demo"}');
+        AssertSuccess(Reply);
+        Reply.GetArray('rows').Get(0, Item);
+        Assert.AreEqual('prefix [redacted] suffix', Item.AsObject().GetText('longSecret'), 'Embedded secrets longer than 256 characters are removed');
     end;
 
     local procedure AssertResultValues(Row: JsonObject; LongText: Text)
@@ -670,6 +689,100 @@ codeunit 98140 "ODBC Messages Tst ori"
         Assert.AreEqual(7, Row.GetInteger('number'), 'Numeric type preserved');
         Assert.IsTrue(Row.GetBoolean('boolean'), 'Boolean type preserved');
         Assert.AreEqual('', Row.GetText('empty'), 'Empty text preserved');
+    end;
+
+    /// <summary>Data values with URLs, key=value text and long text are returned unchanged in LCID 1033.</summary>
+    [Test]
+    procedure DataPreserved_1033()
+    begin
+        Initialize(1033);
+        VerifyDataPreserved();
+        Cleanup();
+    end;
+
+    /// <summary>The Read role caches the Source.Test identity through the handler but cannot edit the source in LCID 1033.</summary>
+    [Test]
+    procedure ReadRoleSourceTest_1033()
+    begin
+        Initialize(1033);
+        VerifyReadRoleSourceTest();
+        Cleanup();
+    end;
+
+    /// <summary>Data values with URLs, key=value text and long text are returned unchanged in LCID 1039.</summary>
+    [Test]
+    procedure DataPreserved_1039()
+    begin
+        Initialize(1039);
+        VerifyDataPreserved();
+        Cleanup();
+    end;
+
+    /// <summary>The Read role caches the Source.Test identity through the handler but cannot edit the source in LCID 1039.</summary>
+    [Test]
+    procedure ReadRoleSourceTest_1039()
+    begin
+        Initialize(1039);
+        VerifyReadRoleSourceTest();
+        Cleanup();
+    end;
+
+    local procedure VerifyDataPreserved()
+    var
+        Reply: JsonObject;
+        Row: JsonObject;
+        LongText: Text;
+        Index: Integer;
+    begin
+        for Index := 1 to 30 do
+            LongText += 'Long text ' + Format(Index mod 10);
+        Mock.SetResponse('{"driverName":"Driver=Mock","dbmsName":"MockDB=1","dbmsVersion":"https://example.org/v1"}');
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Source.Test", '{"source":"XODBCMSG"}');
+        AssertSuccess(Reply);
+        Assert.AreEqual('Driver=Mock', Reply.GetText('driverName'), 'Driver identity with = preserved');
+        Assert.AreEqual('https://example.org/v1', Reply.GetText('dbmsVersion'), 'Version URL preserved');
+        Mock.SetResponse('{"dbmsName":"MockDB","objects":[{"name":"demo","type":"TABLE","remarks":"key=value https://example.org/doc"}]}');
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Schema.Get", '{"source":"XODBCMSG"}');
+        AssertSuccess(Reply);
+        Assert.AreEqual('key=value https://example.org/doc', Reply.GetArray('objects').GetObject(0).GetText('remarks'), 'Catalogue text preserved');
+        Mock.SetResponse('{"columns":["url","pair","long","mixed"],"rows":[{"url":"https://example.org/a?b=c","pair":"key=value","long":"' + LongText + '","mixed":"before fake-relay-key after=1"}]}');
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT url, pair, long, mixed FROM demo","maxRows":1}');
+        AssertSuccess(Reply);
+        Row := Reply.GetArray('rows').GetObject(0);
+        Assert.AreEqual('https://example.org/a?b=c', Row.GetText('url'), 'URL cell preserved');
+        Assert.AreEqual('key=value', Row.GetText('pair'), 'key=value cell preserved');
+        Assert.IsTrue(StrLen(LongText) > 256, 'Long fixture exceeds the diagnostic bound');
+        Assert.AreEqual(LongText, Row.GetText('long'), 'Long cell preserved');
+        Assert.AreEqual('before [redacted] after=1', Row.GetText('mixed'), 'Only the embedded secret is redacted');
+    end;
+
+    local procedure VerifyReadRoleSourceTest()
+    var
+        Source: Record "ODBC Source ori";
+        TempArgument: Record "Message Argument ori" temporary;
+        Handler: Codeunit "ODBC Message Handler ori";
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+        Request: JsonObject;
+        CanEdit: Boolean;
+    begin
+        Mock.SetResponse('{"driverName":"Read Role Driver","dbmsName":"ReadRoleDB","dbmsVersion":"1.0"}');
+        Request.Add('source', 'XODBCMSG');
+        TempArgument.Init();
+        TempArgument.Insert();
+        TempArgument.SetRequestJson(Request);
+        LowerPermissions.SetExactPermissionSet('BIFROST ODBCRead ori');
+        CanEdit := Source.WritePermission();
+        Handler.Execute(Enum::"Message Type ori"::"ODBC.Source.Test", TempArgument);
+        LowerPermissions.SetOutsideO365Scope();
+        Assert.IsFalse(CanEdit, 'The Read role must not have write permission on sources.');
+        Source.Get('XODBCMSG');
+        Assert.AreEqual('ReadRoleDB', Source."DBMS Name", 'Handler caches the identity under the Read role');
+        Assert.AreEqual('Read Role Driver', Source."Driver Name", 'Handler caches the driver under the Read role');
+        // Last step: asserterror rolls back the uncommitted fixture together with the refused edit.
+        LowerPermissions.SetExactPermissionSet('BIFROST ODBCRead ori');
+        Source."Read Only" := false;
+        asserterror Source.Modify();
+        LowerPermissions.SetOutsideO365Scope();
     end;
 
     local procedure VerifyContracts()
