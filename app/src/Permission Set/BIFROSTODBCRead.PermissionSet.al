@@ -12,7 +12,7 @@ permissionset 10035488 "BIFROST ODBCRead ori"
     Permissions =
         tabledata "ODBC Relay Connection ori" = R,
         tabledata "ODBC Blob Container ori" = R,
-        tabledata "ODBC Source ori" = Rm,
+        tabledata "ODBC Source ori" = R,
         table "ODBC Relay Connection ori" = X,
         table "ODBC Blob Container ori" = X,
         table "ODBC Source ori" = X,

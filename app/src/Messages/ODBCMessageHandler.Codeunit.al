@@ -11,6 +11,7 @@ codeunit 10035521 "ODBC Message Handler ori"
     /// <summary>Executes an ODBC read contract after Foundation licence validation.</summary>
     /// <param name="MessageType">One of the four registered read types.</param>
     /// <param name="Argument">Request and response envelope.</param>
+    [InherentPermissions(PermissionObjectType::TableData, Database::"ODBC Source ori", 'm')]
     procedure Execute(MessageType: Enum "Message Type ori"; var Argument: Record "Message Argument ori")
     var
         Source: Record "ODBC Source ori";
@@ -204,7 +205,7 @@ codeunit 10035521 "ODBC Message Handler ori"
     var
         Secrets: Codeunit "ODBC Secret Mgt ori";
     begin
-        exit(Secrets.Redact(Source, Value));
+        exit(Secrets.RedactValue(Source, Value));
     end;
 
     local procedure Sanitize(Source: Record "ODBC Source ori"; Input: JsonToken; var Output: JsonToken)

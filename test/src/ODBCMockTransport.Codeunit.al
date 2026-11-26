@@ -57,7 +57,7 @@ codeunit 98122 "ODBC Mock Transport ori" implements "ODBC Transport ori"
                 'GetSchema':
                     Response.ReadFrom('{"dbmsName":"MockDB","objects":[{"name":"demo","type":"TABLE","columns":[{"name":"id","type":"INTEGER","nullable":false}]}]}');
                 'Query':
-                    Response.ReadFrom('{"columns":["id"],"rows":[{"id":7},{"id":8},{"id":9}]}');
+                    Response.ReadFrom('{"columns":["id","note"],"rows":[{"id":7,"note":"key=value https://example.org/a"},{"id":8,"note":"key=value https://example.org/a"},{"id":9,"note":"key=value https://example.org/a"}]}');
                 else
                     Error('The MCP fixture supports reads only.');
             end;
