@@ -195,6 +195,12 @@
           <note from="Developer" annotates="general" priority="2">%1 = source code; is-IS=ODBC-uppsprettan %1 er eingöngu til lestrar. Execute er ekki leyft.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Client ori - NamedType ReadOnlyErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 518279145 - NamedType 3209468314" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The ODBC transport failed: %1</source>
+          <target>ODBC-flutningur mistókst: %1</target>
+          <note from="Developer" annotates="general" priority="2">%1 = redacted transport diagnostic; is-IS=ODBC-flutningur mistókst: %1</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Client ori - NamedType TransportErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3843028437 - NamedType 545819735" size-unit="char" translate="yes" xml:space="preserve">
           <source>The ODBC agent returned an invalid row result.</source>
           <target>ODBC-miðlarinn skilaði ógildri línuniðurstöðu.</target>

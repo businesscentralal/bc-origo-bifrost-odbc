@@ -485,6 +485,7 @@ codeunit 98120 "ODBC Client Tst ori"
         Mock.Fail();
         asserterror Client.Query('XODBCAPI', 'select id', Parameters, Reader);
         AssertNoSecrets(GetLastErrorText());
+        AssertClearError(LanguageId, 'transport failed', 'flutningur mistókst');
         Assert.IsTrue(GetLastErrorText().Contains('Mock failure'), 'Diagnostic survives redaction');
         AssertTelemetry(false, 0);
         Assert.AreEqual(0, Reader.RowCount(), 'Failed query clears reader');
@@ -518,14 +519,26 @@ codeunit 98120 "ODBC Client Tst ori"
         Initialize(LanguageId);
         asserterror Client.Query('XODBCAPI', ' ', Parameters, Reader);
         AssertClearError(LanguageId, 'non-empty', 'ekki tóm');
+        Cleanup();
+        Initialize(LanguageId);
         asserterror Client.Query('XNOTFOUND', 'select id', Parameters, Reader);
         AssertClearError(LanguageId, 'does not exist', 'ekki til');
+        Cleanup();
+        Initialize(LanguageId);
         Source.Get('XODBCAPI');
         Source."Row Cap" := 0;
         Source.Modify();
         asserterror Client.Query('XODBCAPI', 'select id', Parameters, Reader);
         AssertClearError(LanguageId, 'must be positive', 'verða að vera jákvæð');
         Assert.AreEqual(0, Mock.GetRequest(Request), 'Invalid input is never transported');
+        Cleanup();
+        Initialize(LanguageId);
+        Source.Get('XODBCAPI');
+        Source."Timeout (s)" := 0;
+        Source.Modify();
+        asserterror Client.Query('XODBCAPI', 'select id', Parameters, Reader);
+        AssertClearError(LanguageId, 'must be positive', 'verða að vera jákvæð');
+        Assert.AreEqual(0, Mock.GetRequest(Request), 'Zero timeout is never transported');
         Cleanup();
     end;
 
