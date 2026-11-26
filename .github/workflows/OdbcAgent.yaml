@@ -1,0 +1,72 @@
+name: ODBC agent (Windows)
+
+# Builds and tests the Bifröst ODBC local agent (agent/, a .NET 8 Windows service) on Windows.
+# Unsigned in PR builds, like the AL PR builds; signing happens at release (agent/Package-SignedAgent.ps1). Issue #13.
+
+on:
+  pull_request:
+    paths:
+      - 'agent/**'
+      - '.github/workflows/OdbcAgent.yaml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'agent/**'
+      - '.github/workflows/OdbcAgent.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: odbc-agent-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Build and test the ODBC agent
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install the SQLite ODBC driver (agent tests use a real ODBC driver)
+        shell: pwsh
+        run: |
+          choco install sqliteodbc --no-progress -y
+          if ($LASTEXITCODE -ne 0) { throw 'SQLite ODBC driver install failed.' }
+          $drivers = Get-OdbcDriver -Platform 64-bit | Where-Object Name -like 'SQLite3*' | Select-Object -ExpandProperty Name
+          if (-not $drivers) { throw 'SQLite3 ODBC driver is not registered (64-bit).' }
+          Write-Output "ODBC drivers: $($drivers -join ', ')"
+          "BIFROST_TEST_SQLITE_DRIVER=$(@($drivers)[0])" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Build, test and publish (unsigned)
+        shell: pwsh
+        run: ./agent/Build-Agent.ps1 -Runtime win-x64 -OutputDirectory "$env:RUNNER_TEMP/agent-out"
+
+      - name: Checksums
+        shell: pwsh
+        run: |
+          $out = Join-Path $env:RUNNER_TEMP 'agent-out'
+          Get-ChildItem -LiteralPath (Join-Path $out 'win-x64') -File -Recurse |
+            Sort-Object FullName |
+            ForEach-Object { '{0}  {1}' -f (Get-FileHash -Algorithm SHA256 -LiteralPath $_.FullName).Hash.ToLowerInvariant(), $_.FullName.Substring($out.Length + 1).Replace('\', '/') } |
+            Set-Content -LiteralPath (Join-Path $out 'SHA256SUMS.txt') -Encoding utf8
+
+      - name: Upload agent (unsigned), checksums and test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: odbc-agent-win-x64-unsigned-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/agent-out/win-x64
+            ${{ runner.temp }}/agent-out/SHA256SUMS.txt
+            ${{ runner.temp }}/agent-out/tests
+          if-no-files-found: warn
+          retention-days: 30
