@@ -75,6 +75,24 @@ codeunit 10035501 "ODBC Secret Mgt ori"
     [NonDebuggable]
     procedure Redact(Source: Record "ODBC Source ori"; Message: Text): Text
     var
+        Result: Text;
+    begin
+        // Diagnostic limits do not apply to successful query/schema data.
+        if StrLen(Message) > 256 then
+            exit(SafeDiagnosticErr);
+        Result := RedactValue(Source, Message);
+        if Result.Contains('=') or Result.Contains('://') then
+            exit(SafeDiagnosticErr);
+        exit(Result);
+    end;
+
+    /// <summary>Removes exact stored secrets while preserving ordinary result text, including URLs and long values.</summary>
+    /// <param name="Source">Source and related setup owning the secrets.</param>
+    /// <param name="Message">Untrusted result text.</param>
+    /// <returns>The original value with each complete secret replaced, without diagnostic heuristics or truncation.</returns>
+    [NonDebuggable]
+    procedure RedactValue(Source: Record "ODBC Source ori"; Message: Text): Text
+    var
         Relay: Record "ODBC Relay Connection ori";
         Blob: Record "ODBC Blob Container ori";
         Cryptography: Codeunit System.Security.Encryption."Cryptography Management";
@@ -88,9 +106,6 @@ codeunit 10035501 "ODBC Secret Mgt ori"
         Result: Text;
         CandidateSecret: SecretText;
     begin
-        // Never truncate an untrusted diagnostic: truncation might expose part of a longer secret.
-        if StrLen(Message) > 256 then
-            exit(SafeDiagnosticErr);
         foreach Ordinal in Kind.Ordinals() do begin
             Kind := Enum::"ODBC Secret Kind ori".FromInteger(Ordinal);
             AddFingerprint(GetSecret(Source.SystemId, Kind), Fingerprints);
@@ -104,7 +119,6 @@ codeunit 10035501 "ODBC Secret Mgt ori"
         StartIndex := 1;
         while StartIndex <= StrLen(Message) do begin
             MatchLength := 0;
-            // At most 32,896 public candidate strings for a 256-character diagnostic.
             // HMAC equality compares secret keys without obtaining their plaintext or length.
             for EndIndex := StrLen(Message) downto StartIndex do
                 if MatchLength = 0 then begin
@@ -121,9 +135,6 @@ codeunit 10035501 "ODBC Secret Mgt ori"
                 StartIndex += 1;
             end;
         end;
-        // Partial connection-string fields and URLs are not safe diagnostics either.
-        if Result.Contains('=') or Result.Contains('://') then
-            exit(SafeDiagnosticErr);
         exit(Result);
     end;
 

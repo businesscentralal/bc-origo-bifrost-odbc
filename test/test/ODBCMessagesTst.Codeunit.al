@@ -579,6 +579,99 @@ codeunit 98140 "ODBC Messages Tst ori"
         Cleanup();
     end;
 
+    /// <summary>Ordinary scalar text survives secret filtering in LCID 1033.</summary>
+    [Test]
+    procedure ResultValues_1033()
+    begin
+        Initialize(1033);
+        VerifyResultValues();
+        Cleanup();
+    end;
+
+    /// <summary>Ordinary scalar text survives secret filtering in LCID 1039.</summary>
+    [Test]
+    procedure ResultValues_1039()
+    begin
+        Initialize(1039);
+        VerifyResultValues();
+        Cleanup();
+    end;
+
+    local procedure VerifyResultValues()
+    var
+        Source: Record "ODBC Source ori";
+        Reply: JsonObject;
+        Payload: JsonObject;
+        Row: JsonObject;
+        Rows: JsonArray;
+        Item: JsonToken;
+        Body: Text;
+        LongText: Text;
+    begin
+        // [GIVEN] Configured fake secrets and ordinary URL, key=value and >256-character data.
+        // Messages use public dispatch; there is no corresponding UI action.
+        LongText := PadStr('description=', 257, 'x');
+        Row.Add('url', 'https://public.invalid/docs');
+        Row.Add('key=value', 'key=value');
+        Row.Add('long', LongText);
+        Row.Add('embedded', LongText + 'fake-relay-key' + ' tail');
+        Row.Add('adjacent', 'fake-relay-key' + 'fake-relay-key');
+        Row.Add('number', 7);
+        Row.Add('boolean', true);
+        Row.Add('empty', '');
+        Rows.Add(Row);
+        Payload.Add('rows', Rows);
+        Payload.WriteTo(Body);
+        Mock.SetResponse(Body);
+
+        // [WHEN] Query and schema results pass through the message handler.
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT id FROM demo"}');
+        AssertSuccess(Reply);
+        Reply.GetArray('rows').Get(0, Item);
+        AssertResultValues(Item.AsObject(), LongText);
+        Clear(Payload);
+        Payload.Add('objects', Rows);
+        Payload.Add('dbmsName', 'dbms=value');
+        Payload.WriteTo(Body);
+        Mock.SetResponse(Body);
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Schema.Get", '{"source":"XODBCMSG"}');
+        AssertSuccess(Reply);
+        Reply.GetArray('objects').Get(0, Item);
+        AssertResultValues(Item.AsObject(), LongText);
+        Assert.AreEqual('dbms=value', Reply.GetText('dbmsName'), 'Schema identity preserved');
+
+        // [THEN] Source identity and descriptions also preserve ordinary URL/key=value data.
+        Mock.SetResponse('{"driverName":"driver=value","dbmsName":"https://public.invalid/db","dbmsVersion":"version=1"}');
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Source.Test", '{"source":"XODBCMSG"}');
+        AssertSuccess(Reply);
+        Assert.AreEqual('driver=value', Reply.GetText('driverName'), 'Driver identity preserved');
+        Assert.AreEqual('https://public.invalid/db', Reply.GetText('dbmsName'), 'DBMS URL preserved');
+        Assert.AreEqual('version=1', Reply.GetText('dbmsVersion'), 'Version preserved');
+        Source.Get('XODBCMSG');
+        Source.Description := 'https://public.invalid/docs?key=value';
+        Source.Modify();
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Source.List", '{}');
+        AssertSuccess(Reply);
+        foreach Item in Reply.GetArray('sources') do
+            if Item.AsObject().GetText('code') = Source.Code then begin
+                Assert.AreEqual(Source.Description, Item.AsObject().GetText('description'), 'Source description preserved');
+                Assert.AreEqual('driver=value', Item.AsObject().GetText('driverName'), 'Cached driver preserved');
+                Assert.AreEqual('https://public.invalid/db', Item.AsObject().GetText('dbmsName'), 'Cached DBMS preserved');
+            end;
+    end;
+
+    local procedure AssertResultValues(Row: JsonObject; LongText: Text)
+    begin
+        Assert.AreEqual('https://public.invalid/docs', Row.GetText('url'), 'URL preserved');
+        Assert.AreEqual('key=value', Row.GetText('key=value'), 'Property name and value preserved');
+        Assert.AreEqual(LongText, Row.GetText('long'), '257-character scalar preserved');
+        Assert.AreEqual(LongText + '[redacted] tail', Row.GetText('embedded'), 'Secret after diagnostic boundary removed without losing ordinary text');
+        Assert.AreEqual('[redacted][redacted]', Row.GetText('adjacent'), 'Repeated adjacent secrets removed');
+        Assert.AreEqual(7, Row.GetInteger('number'), 'Numeric type preserved');
+        Assert.IsTrue(Row.GetBoolean('boolean'), 'Boolean type preserved');
+        Assert.AreEqual('', Row.GetText('empty'), 'Empty text preserved');
+    end;
+
     local procedure VerifyContracts()
     var
         Contracts: Codeunit "Msg Contract Mgt ori";

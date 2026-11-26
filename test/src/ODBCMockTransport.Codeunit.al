@@ -53,11 +53,11 @@ codeunit 98122 "ODBC Mock Transport ori" implements "ODBC Transport ori"
                 Error('The MCP fixture requires readOnly=true.');
             case Operation of
                 'TestConnection':
-                    Response.ReadFrom('{"driverName":"Mock ODBC","dbmsName":"MockDB","dbmsVersion":"1.0"}');
+                    Response.ReadFrom('{"driverName":"Mock ODBC=value","dbmsName":"MockDB","dbmsVersion":"1.0"}');
                 'GetSchema':
-                    Response.ReadFrom('{"dbmsName":"MockDB","objects":[{"name":"demo","type":"TABLE","columns":[{"name":"id","type":"INTEGER","nullable":false}]}]}');
+                    Response.ReadFrom('{"dbmsName":"MockDB","objects":[{"name":"https://public.invalid/demo","type":"TABLE","columns":[{"name":"id","type":"INTEGER","nullable":false}]}]}');
                 'Query':
-                    Response.ReadFrom('{"columns":["id"],"rows":[{"id":7},{"id":8},{"id":9}]}');
+                    Response.ReadFrom('{"columns":["id","url","pair","secret"],"rows":[{"id":7,"url":"https://public.invalid/docs","pair":"key=value","secret":"prefix fake-relay-key suffix"},{"id":8},{"id":9}]}');
                 else
                     Error('The MCP fixture supports reads only.');
             end;

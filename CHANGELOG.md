@@ -4,6 +4,9 @@ All notable changes to Bifrost ODBC are documented here.
 
 ## [28.0.0.0] - 2026-11-26
 
+### Fixed
+- Preserve URLs, key=value text and long scalar values in successful ODBC message results while removing exact stored secrets. Keep diagnostic filtering separate. Cache driver/DBMS identity with narrowly scoped inherent permission; the read role has no source Modify grant.
+
 ### Added
 - Read-only queued message types (issue #3): ODBC.Source.List, ODBC.Source.Test, ODBC.Schema.Get and ODBC.Query.Run; enum extension 10035516, implementations 10035517–10035520, handler 10035521, bilingual contracts 10035522 and pre-transport SELECT validator 10035523. Queries always request read-only access, preserve positional parameters and enforce a per-call row cap. Source tests cache redacted driver/DBMS identity (source table 10035493, new field 12). Public API overloads retain existing signatures. Tests 98140 and test-only MCP fixture API 98141 use the mock transport in English and Icelandic.
 - Public ODBC AL API (issue #2): Query, Execute, TestConnection and GetSchema in client 10035506; capped, typed row cursor in reader 10035507; extensible transport interface/enum 10035508 with relay 10035509 and blob staging/cleanup 10035510. Parameters remain positional, reads always request read-only access, Execute refuses read-only sources, and one metadata-only telemetry event is emitted per call. SecretText-safe encryption, transport and bounded diagnostic redaction. Mock-only bilingual API tests use objects 98120–98122.

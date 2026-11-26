@@ -6,7 +6,6 @@ using Origo.Bifrost;
 codeunit 10035521 "ODBC Message Handler ori"
 {
     Access = Internal;
-    Permissions = tabledata "ODBC Source ori" = rm;
 
     /// <summary>Executes an ODBC read contract after Foundation licence validation.</summary>
     /// <param name="MessageType">One of the four registered read types.</param>
@@ -56,13 +55,18 @@ codeunit 10035521 "ODBC Message Handler ori"
             Refuse(Argument, Enum::"Bifrost Error Code ori"::InvalidParameter, Response.GetText('invalidParameter'), InvalidRequestLbl, ReadContractLbl);
             exit;
         end;
-        if MessageType = MessageType::"ODBC.Source.Test" then begin
-            Source."Driver Name" := CopyStr(Response.GetText('driverName'), 1, MaxStrLen(Source."Driver Name"));
-            Source."DBMS Name" := CopyStr(Response.GetText('dbmsName'), 1, MaxStrLen(Source."DBMS Name"));
-            Source.Modify();
-        end;
+        if MessageType = MessageType::"ODBC.Source.Test" then
+            CacheIdentity(Source, Response);
         Argument.SetResponseJson(Response);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    [InherentPermissions(PermissionObjectType::TableData, Database::"ODBC Source ori", 'M', InherentPermissionsScope::Both)]
+    local procedure CacheIdentity(var Source: Record "ODBC Source ori"; Response: JsonObject)
+    begin
+        Source."Driver Name" := CopyStr(Response.GetText('driverName'), 1, MaxStrLen(Source."Driver Name"));
+        Source."DBMS Name" := CopyStr(Response.GetText('dbmsName'), 1, MaxStrLen(Source."DBMS Name"));
+        Source.Modify();
     end;
 
     [TryFunction]
@@ -204,7 +208,7 @@ codeunit 10035521 "ODBC Message Handler ori"
     var
         Secrets: Codeunit "ODBC Secret Mgt ori";
     begin
-        exit(Secrets.Redact(Source, Value));
+        exit(Secrets.RedactValue(Source, Value));
     end;
 
     local procedure Sanitize(Source: Record "ODBC Source ori"; Input: JsonToken; var Output: JsonToken)
