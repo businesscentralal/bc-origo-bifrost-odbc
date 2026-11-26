@@ -92,8 +92,9 @@ page 98141 "ODBC MCP Fixture ori"
         Relay: Record "ODBC Relay Connection ori";
     begin
         Rec.TestField(Code, 'XODBCMCP');
+        Rec.Delete(true);
         if Relay.Get('XODBCMCP') then
             Relay.Delete(true);
-        exit(true);
+        exit(false);
     end;
 }
