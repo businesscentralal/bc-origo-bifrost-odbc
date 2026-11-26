@@ -1,7 +1,6 @@
 namespace Origo.Bifrost.ODBC.Test;
 
 using Origo.Bifrost.ODBC;
-using System.Security.Encryption;
 using System.TestLibraries.Security.AccessControl;
 using System.TestLibraries.Utilities;
 
@@ -221,10 +220,45 @@ codeunit 98120 "ODBC Client Tst ori"
         VerifyMalformedResponse(1039);
     end;
 
+    /// <summary>AC05 bounded diagnostic redaction in English.</summary>
+    [Test]
+    procedure Scenario_AC05_DiagnosticBounds_English()
+    begin
+        VerifyDiagnosticBounds(1033);
+    end;
+
+    /// <summary>AC05 bounded diagnostic redaction in Icelandic.</summary>
+    [Test]
+    procedure Scenario_AC05_DiagnosticBounds_Icelandic()
+    begin
+        VerifyDiagnosticBounds(1039);
+    end;
+
+    local procedure VerifyDiagnosticBounds(LanguageId: Integer)
+    var
+        Source: Record "ODBC Source ori";
+        Message: Text;
+        Result: Text;
+    begin
+        // [SCENARIO] AC05: bounded matching includes punctuation and never truncates a longer secret.
+        Initialize(LanguageId);
+        Source.Get('XODBCAPI');
+        Message := PadStr('', 256 - StrLen(FakeConnectionLbl), 'x') + FakeConnectionLbl;
+        Result := SecretMgt.Redact(Source, Message);
+        AssertNoSecrets(Result);
+        Assert.IsTrue(Result.EndsWith('[redacted]'), 'Secret at the exact diagnostic boundary');
+        Message := PadStr('', 257, 'x') + FakeConnectionLbl;
+        Result := SecretMgt.Redact(Source, Message);
+        AssertNoSecrets(Result);
+        Assert.IsFalse(Result.Contains('xxx'), 'Oversized diagnostic is replaced, never truncated');
+        Result := SecretMgt.Redact(Source, 'Connection rejected: Password=not-a-real-password');
+        Assert.IsFalse(Result.Contains('Password='), 'Partial connection field is not surfaced');
+        Cleanup();
+    end;
+
     local procedure VerifyQuery(LanguageId: Integer)
     var
         Reader: Codeunit "ODBC Reader ori";
-        Cipher: Codeunit "Rijndael Cryptography";
         Parameters: JsonArray;
         Request: JsonObject;
         SQL: Text;
@@ -244,10 +278,8 @@ codeunit 98120 "ODBC Client Tst ori"
         Assert.AreEqual(SQL, Request.GetText('query'), 'Parameters never enter SQL');
         Request.GetArray('parameters').WriteTo(ActualParameters);
         Assert.AreEqual(ExpectedParameters, ActualParameters, 'Parameter order and values');
-        Assert.IsFalse(Request.GetText('dbConnectionString').Contains(FakeConnectionLbl), 'Plain connection string is not sent');
-        Cipher.InitRijndaelProvider();
-        Cipher.SetEncryptionData(FakeKey, FakeKeyLbl);
-        Assert.AreEqual(FakeConnectionLbl, Cipher.Decrypt(Request.GetText('dbConnectionString')), 'AES-CBC/PKCS7 round trip of fake secret');
+        Assert.IsFalse(Request.Contains('dbConnectionString'), 'Secret connection data is separate from diagnostic JSON');
+        Assert.IsTrue(Mock.HasValidEncryptedConnection('XODBCAPI'), 'Encrypted connection provided as SecretText');
         AssertLimits(Request, true);
         Assert.IsTrue(Reader.Read(), 'First row');
         Assert.AreEqual(7, Reader.GetInteger('id'), 'Integer');
@@ -312,7 +344,7 @@ codeunit 98120 "ODBC Client Tst ori"
         Assert.AreEqual(1, Mock.GetRequest(Request), 'Transport invocation');
         AssertLimits(Request, false);
         Assert.AreEqual(9, Request.GetArray('parameters').GetInteger(0), 'Execute parameter');
-        AssertTelemetry(true, 0);
+        AssertTelemetry(true, 3);
         Cleanup();
     end;
 

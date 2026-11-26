@@ -78,6 +78,7 @@ codeunit 10035506 "ODBC Client ori"
         StartedAt: DateTime;
         Diagnostic: Text;
         Success: Boolean;
+        RowCount: Integer;
     begin
         StartedAt := CurrentDateTime();
         ClearLastError();
@@ -91,7 +92,10 @@ codeunit 10035506 "ODBC Client ori"
             Clear(Reader);
             Clear(Response);
         end;
-        LogCall(SourceCode, Operation, Reader.RowCount(), CurrentDateTime() - StartedAt, Success);
+        RowCount := Reader.RowCount();
+        if Success and (Operation = 'Execute') then
+            RowCount := Response.GetInteger('affectedRows');
+        LogCall(SourceCode, Operation, RowCount, CurrentDateTime() - StartedAt, Success);
         if not Success then
             Error(Diagnostic);
     end;
@@ -101,9 +105,11 @@ codeunit 10035506 "ODBC Client ori"
     var
         Source: Record "ODBC Source ori";
         Validation: Codeunit "ODBC Setup Validation ori";
+        SecretMgt: Codeunit "ODBC Secret Mgt ori";
         Transport: Interface "ODBC Transport ori";
         Request: JsonObject;
         Token: JsonToken;
+        EncryptedConnection: SecretText;
         Count: Integer;
         Identity: Text;
     begin
@@ -124,9 +130,9 @@ codeunit 10035506 "ODBC Client ori"
         Request.Add('readOnly', Operation <> 'Execute');
         Request.Add('rowCap', Source."Row Cap");
         Request.Add('timeoutSeconds', Source."Timeout (s)");
-        EncryptConnection(Source, Request);
+        EncryptedConnection := SecretMgt.EncryptConnection(Source);
         Transport := Source.Transport;
-        Transport.Send(Source, Operation, Request, Response);
+        Transport.Send(Source, Operation, Request, EncryptedConnection, Response);
         if Response.Get('error', Token) then
             if not Token.AsValue().IsNull() then
                 if Token.AsValue().AsText() <> '' then
@@ -155,13 +161,6 @@ codeunit 10035506 "ODBC Client ori"
                         Error(InvalidResponseErr);
                 end;
         end;
-    end;
-
-    local procedure EncryptConnection(Source: Record "ODBC Source ori"; var Request: JsonObject)
-    var
-        SecretMgt: Codeunit "ODBC Secret Mgt ori";
-    begin
-        Request.Add('dbConnectionString', SecretMgt.EncryptConnection(Source));
     end;
 
     local procedure LogCall(SourceCode: Code[20]; Operation: Text; RowCount: Integer; Elapsed: Duration; Success: Boolean)

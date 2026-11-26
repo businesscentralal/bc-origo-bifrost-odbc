@@ -225,6 +225,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=ODBC relay-beiðni mistókst. Athugaðu relay, miðlara og tímamörk.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Relay Transport ori - NamedType TransportErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1812664066 - NamedType 1406775333" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The ODBC request failed. The agent diagnostic contained sensitive or oversized content.</source>
+          <target>ODBC-beiðni mistókst. Greining miðlarans innihélt viðkvæmt eða of stórt efni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ODBC-beiðni mistókst. Greining miðlarans innihélt viðkvæmt eða of stórt efni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Secret Mgt ori - NamedType SafeDiagnosticErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 471558038 - NamedType 2017845471" size-unit="char" translate="yes" xml:space="preserve">
           <source>The blob container %2 of ODBC source %1 does not exist.</source>
           <target>Blob-gámurinn %2 í ODBC-uppsprettunni %1 er ekki til.</target>

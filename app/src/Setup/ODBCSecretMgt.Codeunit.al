@@ -68,34 +68,79 @@ codeunit 10035501 "ODBC Secret Mgt ori"
             Clear(Value);
     end;
 
-    /// <summary>Removes stored secrets from an untrusted diagnostic before it can leave the app.</summary>
+    /// <summary>Removes every exact stored secret from a bounded, untrusted diagnostic without unwrapping credentials.</summary>
     /// <param name="Source">Source whose secrets must be removed.</param>
     /// <param name="Message">Untrusted diagnostic.</param>
-    /// <returns>A diagnostic with secret values removed.</returns>
+    /// <returns>A redacted diagnostic, or a localized safe fallback for oversized diagnostics.</returns>
     [NonDebuggable]
     procedure Redact(Source: Record "ODBC Source ori"; Message: Text): Text
     var
         Relay: Record "ODBC Relay Connection ori";
         Blob: Record "ODBC Blob Container ori";
+        Cryptography: Codeunit System.Security.Encryption."Cryptography Management";
         Kind: Enum "ODBC Secret Kind ori";
+        Fingerprints: List of [Text];
         Ordinal: Integer;
+        StartIndex: Integer;
+        EndIndex: Integer;
+        MatchLength: Integer;
+        Candidate: Text;
+        Result: Text;
+        CandidateSecret: SecretText;
     begin
+        // Never truncate an untrusted diagnostic: truncation might expose part of a longer secret.
+        if StrLen(Message) > 256 then
+            exit(SafeDiagnosticErr);
         foreach Ordinal in Kind.Ordinals() do begin
             Kind := Enum::"ODBC Secret Kind ori".FromInteger(Ordinal);
-            Message := RedactValue(Message, GetSecretText(Source.SystemId, Kind));
+            AddFingerprint(GetSecret(Source.SystemId, Kind), Fingerprints);
             if Relay.Get(Source."Relay Connection Code") then
-                Message := RedactValue(Message, GetSecretText(Relay.SystemId, Kind));
+                AddFingerprint(GetSecret(Relay.SystemId, Kind), Fingerprints);
             if Blob.Get(Source."Blob Container Code") then
-                Message := RedactValue(Message, GetSecretText(Blob.SystemId, Kind));
+                AddFingerprint(GetSecret(Blob.SystemId, Kind), Fingerprints);
         end;
-        exit(Message);
+        if Fingerprints.Count() = 0 then
+            exit(Message);
+        StartIndex := 1;
+        while StartIndex <= StrLen(Message) do begin
+            MatchLength := 0;
+            // At most 32,896 public candidate strings for a 256-character diagnostic.
+            // HMAC equality compares secret keys without obtaining their plaintext or length.
+            for EndIndex := StrLen(Message) downto StartIndex do
+                if MatchLength = 0 then begin
+                    Candidate := CopyStr(Message, StartIndex, EndIndex - StartIndex + 1);
+                    CandidateSecret := Candidate;
+                    if Fingerprints.Contains(Cryptography.GenerateHashAsBase64String('ODBC diagnostic comparison v1', CandidateSecret, 2)) then
+                        MatchLength := EndIndex - StartIndex + 1;
+                end;
+            if MatchLength > 0 then begin
+                Result += '[redacted]';
+                StartIndex += MatchLength;
+            end else begin
+                Result += CopyStr(Message, StartIndex, 1);
+                StartIndex += 1;
+            end;
+        end;
+        // Partial connection-string fields and URLs are not safe diagnostics either.
+        if Result.Contains('=') or Result.Contains('://') then
+            exit(SafeDiagnosticErr);
+        exit(Result);
     end;
 
-    /// <summary>Encrypts a stored connection string to wire-format base64 without exposing it to callers.</summary>
-    /// <param name="Source">Source with base64 AES key and vector.</param>
-    /// <returns>AES-CBC/PKCS7 ciphertext only.</returns>
     [NonDebuggable]
-    procedure EncryptConnection(Source: Record "ODBC Source ori"): Text
+    local procedure AddFingerprint(Value: SecretText; var Fingerprints: List of [Text])
+    var
+        Cryptography: Codeunit System.Security.Encryption."Cryptography Management";
+    begin
+        if not Value.IsEmpty() then
+            Fingerprints.Add(Cryptography.GenerateHashAsBase64String('ODBC diagnostic comparison v1', Value, 2));
+    end;
+
+    /// <summary>Encrypts the connection string while retaining SecretText protection through the wire boundary.</summary>
+    /// <param name="Source">Source with base64 AES key and vector.</param>
+    /// <returns>AES-CBC/PKCS7 ciphertext as SecretText.</returns>
+    [NonDebuggable]
+    procedure EncryptConnection(Source: Record "ODBC Source ori"): SecretText
     var
         Cipher: Codeunit System.Security.Encryption."Rijndael Cryptography";
     begin
@@ -104,23 +149,7 @@ codeunit 10035501 "ODBC Secret Mgt ori"
         Cipher.SetCipherMode('CBC');
         Cipher.SetPaddingMode('PKCS7');
         Cipher.SetEncryptionData(GetSecret(Source.SystemId, Enum::"ODBC Secret Kind ori"::AesKey), Source."AES Vector");
-        exit(Cipher.Encrypt(GetSecretText(Source.SystemId, Enum::"ODBC Secret Kind ori"::ConnectionString)));
-    end;
-
-    [NonDebuggable]
-    local procedure GetSecretText(OwnerId: Guid; SecretKind: Enum "ODBC Secret Kind ori") Value: Text
-    begin
-        // Plain text is confined to encryption and redaction inside this non-debuggable codeunit.
-        if not IsolatedStorage.Get(StorageKey(OwnerId, SecretKind), DataScope::Company, Value) then
-            Clear(Value);
-    end;
-
-    [NonDebuggable]
-    local procedure RedactValue(Message: Text; Value: Text): Text
-    begin
-        if Value <> '' then
-            exit(Message.Replace(Value, '[redacted]'));
-        exit(Message);
+        exit(Cipher.Encrypt(GetSecret(Source.SystemId, Enum::"ODBC Secret Kind ori"::ConnectionString)));
     end;
 
     local procedure StorageKey(OwnerId: Guid; SecretKind: Enum "ODBC Secret Kind ori"): Text
@@ -129,5 +158,6 @@ codeunit 10035501 "ODBC Secret Mgt ori"
     end;
 
     var
+        SafeDiagnosticErr: Label 'The ODBC request failed. The agent diagnostic contained sensitive or oversized content.', Comment = 'is-IS=ODBC-beiðni mistókst. Greining miðlarans innihélt viðkvæmt eða of stórt efni.';
         KeyTok: Label 'ODBC-%1-%2', Locked = true;
 }

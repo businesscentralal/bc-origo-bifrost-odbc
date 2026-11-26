@@ -20,22 +20,45 @@ codeunit 10035510 "ODBC Blob Transport ori"
     begin
         Container.Get(Source."Blob Container Code");
         Secret := SecretMgt.GetSecret(Container.SystemId, Enum::"ODBC Secret Kind ori"::BlobSecret);
+        StorageAccount := Container."Storage Account";
+        ContainerName := Container."Container Name";
+        if (StorageAccount = '') or (ContainerName = '') or
+           (DelChr(StorageAccount, '=', 'abcdefghijklmnopqrstuvwxyz0123456789') <> '') or
+           (DelChr(ContainerName, '=', 'abcdefghijklmnopqrstuvwxyz0123456789-') <> '')
+        then
+            Error(BlobErr);
         if Container."Auth Type" = Container."Auth Type"::AccountKey then
-            BlobClient.Initialize(Container."Storage Account", Container."Container Name", Authorization.CreateSharedKey(Secret))
+            BlobAuthorization := Authorization.CreateSharedKey(Secret)
         else
-            BlobClient.Initialize(Container."Storage Account", Container."Container Name", Authorization.UseReadySAS(Secret));
+            BlobAuthorization := Authorization.UseReadySAS(Secret);
+        BlobClient.Initialize(StorageAccount, ContainerName, BlobAuthorization);
     end;
 
     /// <summary>Stages a large request under a unique name.</summary>
     /// <param name="Body">JSON request.</param>
     /// <param name="FileId">Generated blob name, retained for cleanup even on failure.</param>
-    procedure Upload(Body: Text; var FileId: Text)
+    procedure Upload(Body: SecretText; var FileId: Text)
     var
-        OperationResponse: Codeunit "ABS Operation Response";
+        Client: HttpClient;
+        Request: HttpRequestMessage;
+        Reply: HttpResponseMessage;
+        Headers: HttpHeaders;
+        Content: HttpContent;
     begin
         FileId := Format(CreateGuid(), 0, 4);
-        OperationResponse := BlobClient.PutBlobBlockBlobText(FileId, Body, 'application/json');
-        if not OperationResponse.IsSuccessful() then
+        Request.SetRequestUri('https://' + StorageAccount + '.blob.core.windows.net/' + ContainerName + '/' + FileId);
+        Request.Method := 'PUT';
+        Content.WriteFrom(Body);
+        Content.GetHeaders(Headers);
+        Headers.Remove('Content-Type');
+        Headers.Add('Content-Type', 'application/json');
+        Request.Content := Content;
+        Request.GetHeaders(Headers);
+        Headers.Add('x-ms-blob-type', 'BlockBlob');
+        BlobAuthorization.Authorize(Request, StorageAccount);
+        if not Client.Send(Request, Reply) then
+            Error(BlobErr);
+        if not Reply.IsSuccessStatusCode() then
             Error(BlobErr);
     end;
 
@@ -77,5 +100,8 @@ codeunit 10035510 "ODBC Blob Transport ori"
 
     var
         BlobClient: Codeunit "ABS Blob Client";
+        BlobAuthorization: Interface "Storage Service Authorization";
+        StorageAccount: Text;
+        ContainerName: Text;
         BlobErr: Label 'The ODBC blob transfer failed. Check the container configuration.', Comment = 'is-IS=ODBC blob-flutningur mistókst. Athugaðu uppsetningu gámsins.';
 }

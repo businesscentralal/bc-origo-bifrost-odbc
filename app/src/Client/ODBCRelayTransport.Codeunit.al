@@ -14,15 +14,16 @@ codeunit 10035509 "ODBC Relay Transport ori" implements "ODBC Transport ori"
     /// <param name="Source">Validated source.</param>
     /// <param name="Operation">API operation.</param>
     /// <param name="Request">Request payload with encrypted connection string.</param>
+    /// <param name="EncryptedConnection">AES ciphertext retained as SecretText.</param>
     /// <param name="Response">Agent response JSON.</param>
-    procedure Send(Source: Record "ODBC Source ori"; Operation: Text; Request: JsonObject; var Response: JsonObject)
+    procedure Send(Source: Record "ODBC Source ori"; Operation: Text; Request: JsonObject; EncryptedConnection: SecretText; var Response: JsonObject)
     var
         Success: Boolean;
         CleanupSucceeded: Boolean;
     begin
         Clear(RequestFileId);
         Clear(ResponseFileId);
-        Success := TrySend(Source, Operation, Request, Response);
+        Success := TrySend(Source, Operation, Request, EncryptedConnection, Response);
         if Source."Blob Container Code" <> '' then begin
             CleanupSucceeded := BlobTransport.TryDelete(RequestFileId);
             CleanupSucceeded := BlobTransport.TryDelete(ResponseFileId) and CleanupSucceeded;
@@ -35,7 +36,7 @@ codeunit 10035509 "ODBC Relay Transport ori" implements "ODBC Transport ori"
     end;
 
     [TryFunction]
-    local procedure TrySend(Source: Record "ODBC Source ori"; Operation: Text; Request: JsonObject; var Response: JsonObject)
+    local procedure TrySend(Source: Record "ODBC Source ori"; Operation: Text; Request: JsonObject; EncryptedConnection: SecretText; var Response: JsonObject)
     var
         Relay: Record "ODBC Relay Connection ori";
         Client: HttpClient;
@@ -44,6 +45,7 @@ codeunit 10035509 "ODBC Relay Transport ori" implements "ODBC Transport ori"
         Headers: HttpHeaders;
         Content: HttpContent;
         Body: Text;
+        SecretBody: SecretText;
         Endpoint: Text;
     begin
         Relay.Get(Source."Relay Connection Code");
@@ -55,8 +57,9 @@ codeunit 10035509 "ODBC Relay Transport ori" implements "ODBC Transport ori"
             Request.Add('responseViaBlob', true);
         end;
         Request.WriteTo(Body);
+        SecretBody := SecretStrSubstNo('%1,"dbConnectionString":"%2"}', CopyStr(Body, 1, StrLen(Body) - 1), EncryptedConnection);
         if (StrLen(Body) > 65536) and (Source."Blob Container Code" <> '') then begin
-            BlobTransport.Upload(Body, RequestFileId);
+            BlobTransport.Upload(SecretBody, RequestFileId);
             Clear(Request);
             Request.Add('queryFileId', RequestFileId);
             Request.Add('operation', Operation);
@@ -64,8 +67,9 @@ codeunit 10035509 "ODBC Relay Transport ori" implements "ODBC Transport ori"
             Request.Add('timeoutSeconds', Source."Timeout (s)");
             Request.Add('readOnly', Operation <> 'Execute');
             Request.WriteTo(Body);
+            SecretBody := Body;
         end;
-        Content.WriteFrom(Body);
+        Content.WriteFrom(SecretBody);
         Content.GetHeaders(Headers);
         Headers.Remove('Content-Type');
         Headers.Add('Content-Type', 'application/json');

@@ -34,7 +34,7 @@ The reader exposes `GetText`, `GetInteger`, `GetDecimal`, `GetBoolean`, `GetDate
 It is an AL API for PTEs and migration code. `TestConnection(SourceCode, DriverName, DbmsName, DbmsVersion)` returns
 three Text outputs. `GetSchema(SourceCode, ObjectFilter, Result)` returns catalog tables/views with nested columns.
 All four operations validate source setup, send row cap/timeout and emit one metadata-only `ODBC-0001` telemetry event.
-The dimensions are source code, operation, retained query row count, elapsed milliseconds and outcome. SQL,
+The dimensions are source code, operation, retained query / affected Execute row count, elapsed milliseconds and outcome. SQL,
 parameters, connection strings, keys and agent diagnostics never enter this event.
 
 ## Agent wire contract
@@ -68,7 +68,9 @@ extend the enum and implement `ODBC Transport ori.Send` without changing the cli
 GetSchema sends `objectFilter` separately and leaves `query` empty. Query/connection/schema always send `readOnly=true`,
 even when the source permits Execute. Both the agent and BC enforce the cap: BC drops excess rows and marks the reader
 truncated. Empty query results can retain their column metadata. Agent errors retain the agent diagnostic after stored
-credentials and SQL are redacted. Relay, HTTP, crypto and blob failures return localized diagnostics without raw bodies.
+credentials and SQL are redacted. Credentials remain `SecretText` through encryption and HTTP content.
+Diagnostics up to 256 characters are matched against stored secrets using keyed hash comparisons, without unwrapping
+credentials. Oversized diagnostics and residual connection-string fields/URLs return a localized safe fallback. Relay, HTTP, crypto and blob failures return localized diagnostics without raw bodies.
 
 With a blob container configured, the relay receives `responseViaBlob=true`. Bodies above 65,536 characters are staged
 under a generated GUID and replaced by `queryFileId` plus operation, readOnly, rowCap and timeoutSeconds. The agent reads
