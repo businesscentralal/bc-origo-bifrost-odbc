@@ -543,6 +543,42 @@ codeunit 98140 "ODBC Messages Tst ori"
         Cleanup();
     end;
 
+    /// <summary>Refuses ambiguous DollarQuotes dialect quoting before transport, LCID 1033.</summary>
+    [Test]
+    procedure RefuseDollarQuotes_1033()
+    begin
+        Initialize(1033);
+        AssertRefused('SELECT $$''$$;DELETE FROM demo;--''');
+        Cleanup();
+    end;
+
+    /// <summary>Refuses ambiguous BackslashQuotes dialect quoting before transport, LCID 1033.</summary>
+    [Test]
+    procedure RefuseBackslashQuotes_1033()
+    begin
+        Initialize(1033);
+        AssertRefused('SELECT ''\'' '';DELETE FROM demo;--''');
+        Cleanup();
+    end;
+
+    /// <summary>Refuses ambiguous DollarQuotes dialect quoting before transport, LCID 1039.</summary>
+    [Test]
+    procedure RefuseDollarQuotes_1039()
+    begin
+        Initialize(1039);
+        AssertRefused('SELECT $$''$$;DELETE FROM demo;--''');
+        Cleanup();
+    end;
+
+    /// <summary>Refuses ambiguous BackslashQuotes dialect quoting before transport, LCID 1039.</summary>
+    [Test]
+    procedure RefuseBackslashQuotes_1039()
+    begin
+        Initialize(1039);
+        AssertRefused('SELECT ''\'' '';DELETE FROM demo;--''');
+        Cleanup();
+    end;
+
     local procedure VerifyContracts()
     var
         Contracts: Codeunit "Msg Contract Mgt ori";
@@ -810,6 +846,7 @@ codeunit 98140 "ODBC Messages Tst ori"
     local procedure AssertSuccess(Reply: JsonObject)
     begin
         Assert.AreEqual('Success', Reply.GetText('status'), 'Read succeeded: ' + Format(Reply));
+        Assert.IsFalse(Reply.Contains('warnings'), 'Valid request has no spurious parameter warnings');
     end;
 
     local procedure AssertProblem(Reply: JsonObject; ExpectedCode: Text)

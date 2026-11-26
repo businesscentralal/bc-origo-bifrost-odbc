@@ -26,6 +26,9 @@ codeunit 10035523 "ODBC Read Statement ori"
         Index := 1;
         while Index <= StrLen(SQL) do begin
             Character := CopyStr(SQL, Index, 1);
+            // Backslash escapes differ between ODBC dialects; do not guess string boundaries.
+            if Character = '\' then
+                exit(false);
             if Quote <> '' then begin
                 if Character = Quote then
                     if CopyStr(SQL, Index + 1, 1) = Quote then
@@ -44,7 +47,7 @@ codeunit 10035523 "ODBC Read Statement ori"
                             if Character = '[' then
                                 Quote := ']';
                         end;
-                    ';', '#', '\':
+                    ';', '#', '$':
                         exit(false);
                     '-', '/':
                         begin

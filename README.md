@@ -30,7 +30,7 @@ in positional `?` order; its length must match the placeholders. `maxRows` is a 
 Row Cap; omitted uses Row Cap. Both source modes send `readOnly=true`. Results contain `columns`, `rows`,
 `rowCount` and `truncated`; JSON nulls and scalar types are preserved.
 
-Write/DDL/EXEC keywords, SELECT INTO, comments, statement delimiters and a second top-level SELECT are refused
+Write/DDL/EXEC keywords, SELECT INTO, comments, statement delimiters, ambiguous dollar/backslash quoting and a second top-level SELECT are refused
 before transport with `InvalidParameter`. The conservative guard may refuse SQL that a driver could read safely;
 the agent/driver must also enforce read-only access. Unknown sources return `RecordNotFound`; blocked sources
 return `PreconditionFailed`. Every typed error includes `nextStep`. Queued request bodies are redacted after parsing;

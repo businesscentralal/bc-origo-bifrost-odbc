@@ -21,6 +21,9 @@ codeunit 10035521 "ODBC Message Handler ori"
     begin
         Request := Argument.GetRequestJson();
         Argument.RedactRequestData();
+        // Foundation checks parameter names after execution. Keep its temporary argument accurate;
+        // SetRequestJson does not restore the persisted Message request that was just redacted.
+        Argument.SetRequestJson(Request);
         if MessageType <> MessageType::"ODBC.Source.List" then begin
             if not Request.Get('source', Token) then begin
                 Refuse(Argument, Enum::"Bifrost Error Code ori"::MissingParameter, 'source', SourceRequiredLbl, SelectSourceLbl);
@@ -89,6 +92,7 @@ codeunit 10035521 "ODBC Message Handler ori"
             MessageType::"ODBC.Source.List":
                 begin
                     Source.SetLoadFields(Code, Description, "Driver Name", "DBMS Name", "Read Only", Blocked, SystemId, "Relay Connection Code", "Blob Container Code");
+                    Source.ReadIsolation := IsolationLevel::ReadCommitted;
                     if Source.FindSet() then
                         repeat
                             Clear(Item);

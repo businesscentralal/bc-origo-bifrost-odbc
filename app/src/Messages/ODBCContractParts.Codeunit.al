@@ -48,7 +48,7 @@ codeunit 10035522 "ODBC Contract Parts ori"
         Contracts: Codeunit "Msg Contract Mgt ori";
         Fields: JsonArray;
         Children: JsonArray;
-        Field: JsonObject;
+        ResponseField: JsonObject;
     begin
         Fields.Add(Contracts.ResponseField('status', 'string', 'Success.'));
         case MessageType of
@@ -60,9 +60,9 @@ codeunit 10035522 "ODBC Contract Parts ori"
                     Children.Add(Contracts.ResponseField('dbmsName', 'string', 'DBMS from the last successful source test, or empty.'));
                     Children.Add(Contracts.ResponseField('readOnly', 'boolean', 'Configured source policy. Agent queries always use readOnly=true.'));
                     Children.Add(Contracts.ResponseField('blocked', 'boolean', 'Blocked sources are listed but cannot be called.'));
-                    Field := Contracts.ResponseField('sources', 'array', 'Configured sources only; never connection strings, DSNs, relay/blob details or keys.');
-                    Field.Add('children', Children);
-                    Fields.Add(Field);
+                    ResponseField := Contracts.ResponseField('sources', 'array', 'Configured sources only; never connection strings, DSNs, relay/blob details or keys.');
+                    ResponseField.Add('children', Children);
+                    Fields.Add(ResponseField);
                 end;
             MessageType::"ODBC.Source.Test":
                 begin
@@ -76,11 +76,11 @@ codeunit 10035522 "ODBC Contract Parts ori"
                     Fields.Add(Contracts.ResponseField('dbmsName', 'string', 'DBMS dialect from the agent, falling back to the last successful source test. Test the source first if empty.'));
                     Children.Add(Contracts.ResponseField('name', 'string', 'Table or view name.'));
                     Children.Add(Contracts.ResponseField('type', 'string', 'Table or view.'));
-                    Field := Contracts.ResponseField('columns', 'array', 'Column objects with name (string), type (string) and nullable (boolean).');
-                    Children.Add(Field);
-                    Field := Contracts.ResponseField('objects', 'array', 'Catalog tables/views and their columns.');
-                    Field.Add('children', Children);
-                    Fields.Add(Field);
+                    ResponseField := Contracts.ResponseField('columns', 'array', 'Column objects with name (string), type (string) and nullable (boolean).');
+                    Children.Add(ResponseField);
+                    ResponseField := Contracts.ResponseField('objects', 'array', 'Catalog tables/views and their columns.');
+                    ResponseField.Add('children', Children);
+                    Fields.Add(ResponseField);
                 end;
             MessageType::"ODBC.Query.Run":
                 begin
