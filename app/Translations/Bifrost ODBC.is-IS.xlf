@@ -861,6 +861,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Bifröst - ODBC (lestur)</note>
           <note from="Xliff Generator" annotates="general" priority="3">PermissionSet BIFROST ODBCRead ori - Property Caption</note>
         </trans-unit>
+        <trans-unit id="PageExtension 1576754283 - Action 3296823759 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 859178725">
+          <source>Open the ODBC sources, where Bifrost ODBC is set up.</source>
+          <target>Opna ODBC-uppsprettur þar sem Bifröst ODBC er sett upp.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opna ODBC-uppsprettur þar sem Bifröst ODBC er sett upp.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ODBC Bifrost ori - Action ODBCSetup - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1576754283 - Action 3296823759 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 859178725">
+          <source>Bifrost ODBC Setup</source>
+          <target>Uppsetning Bifröst ODBC</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppsetning Bifröst ODBC</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension ODBC Bifrost ori - Action ODBCSetup - Property Caption</note>
+        </trans-unit>
       </group>
     </body>
   </file>
