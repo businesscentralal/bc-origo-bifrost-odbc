@@ -5,6 +5,7 @@ using Origo.Bifrost;
 using Origo.Bifrost.ODBC;
 using System.Globalization;
 using System.TestLibraries.Utilities;
+using System.Utilities;
 
 /// <summary>Story #3: public dispatch, contracts, pre-transport refusals and secret protection in both locales.</summary>
 codeunit 98140 "ODBC Messages Tst ori"
@@ -20,6 +21,115 @@ codeunit 98140 "ODBC Messages Tst ori"
         LanguageId: Integer;
         FakeConnectionLbl: Label 'Driver={Mock};Server=example.invalid;Password=x-unit-only;', Locked = true;
         FakeKeyLbl: Label 'MDEyMzQ1Njc4OWFiY2RlZg==', Locked = true;
+        BinaryResultLbl: Label '{"columns":["id","name","picture"],"rows":[{"id":1,"name":"Bicycle","picture":"AAECAwT/"},{"id":2,"name":"Tent","picture":null}]}', Locked = true;
+
+    /// <summary>Story #18 StagedOutput in LCID 1033.</summary>
+    [Test]
+    procedure StagedOutput_1033()
+    begin
+        Initialize(1033);
+        VerifyStagedOutput();
+        Cleanup();
+    end;
+
+    /// <summary>Story #18 InlineOutput in LCID 1033.</summary>
+    [Test]
+    procedure InlineOutput_1033()
+    begin
+        Initialize(1033);
+        VerifyInlineOutput();
+        Cleanup();
+    end;
+
+    /// <summary>Story #18 AutoStage in LCID 1033.</summary>
+    [Test]
+    procedure AutoStage_1033()
+    begin
+        Initialize(1033);
+        VerifyAutoStage();
+        Cleanup();
+    end;
+
+    /// <summary>Story #18 StagedSizeCap in LCID 1033.</summary>
+    [Test]
+    procedure StagedSizeCap_1033()
+    begin
+        Initialize(1033);
+        VerifyStagedSizeCap();
+        Cleanup();
+    end;
+
+    /// <summary>Story #18 InvalidOutput in LCID 1033.</summary>
+    [Test]
+    procedure InvalidOutput_1033()
+    begin
+        Initialize(1033);
+        VerifyInvalidOutput();
+        Cleanup();
+    end;
+
+    /// <summary>Story #18 StagingIdIsolation in LCID 1033.</summary>
+    [Test]
+    procedure StagingIdIsolation_1033()
+    begin
+        Initialize(1033);
+        VerifyStagingIdIsolation();
+        Cleanup();
+    end;
+
+    /// <summary>Story #18 StagedOutput in LCID 1039.</summary>
+    [Test]
+    procedure StagedOutput_1039()
+    begin
+        Initialize(1039);
+        VerifyStagedOutput();
+        Cleanup();
+    end;
+
+    /// <summary>Story #18 InlineOutput in LCID 1039.</summary>
+    [Test]
+    procedure InlineOutput_1039()
+    begin
+        Initialize(1039);
+        VerifyInlineOutput();
+        Cleanup();
+    end;
+
+    /// <summary>Story #18 AutoStage in LCID 1039.</summary>
+    [Test]
+    procedure AutoStage_1039()
+    begin
+        Initialize(1039);
+        VerifyAutoStage();
+        Cleanup();
+    end;
+
+    /// <summary>Story #18 StagedSizeCap in LCID 1039.</summary>
+    [Test]
+    procedure StagedSizeCap_1039()
+    begin
+        Initialize(1039);
+        VerifyStagedSizeCap();
+        Cleanup();
+    end;
+
+    /// <summary>Story #18 InvalidOutput in LCID 1039.</summary>
+    [Test]
+    procedure InvalidOutput_1039()
+    begin
+        Initialize(1039);
+        VerifyInvalidOutput();
+        Cleanup();
+    end;
+
+    /// <summary>Story #18 StagingIdIsolation in LCID 1039.</summary>
+    [Test]
+    procedure StagingIdIsolation_1039()
+    begin
+        Initialize(1039);
+        VerifyStagingIdIsolation();
+        Cleanup();
+    end;
 
     /// <summary>Contracts in LCID 1033.</summary>
     [Test]
@@ -785,6 +895,184 @@ codeunit 98140 "ODBC Messages Tst ori"
         LowerPermissions.SetOutsideO365Scope();
     end;
 
+    local procedure VerifyStagedOutput()
+    var
+        Inline: JsonObject;
+        Staged: JsonObject;
+        Expected: JsonObject;
+        ExpectedText: Text;
+        StagedText: Text;
+        ContentType: Text;
+        FileName: Text;
+        ByteSize: BigInteger;
+    begin
+        // [GIVEN] A result with a binary column (base64 from the agent) on the mock transport.
+        Mock.SetResponse(BinaryResultLbl);
+        // [WHEN] The same query runs inline and staged.
+        Inline := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT id, name, picture FROM demo"}');
+        AssertSuccess(Inline);
+        Mock.SetResponse(BinaryResultLbl);
+        Staged := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT id, name, picture FROM demo","output":"staged"}');
+        AssertSuccess(Staged);
+        // [THEN] The staged response carries the reference and metadata but no rows.
+        Assert.IsTrue(Staged.GetBoolean('staged'), 'Staged flag');
+        Assert.IsFalse(Staged.Contains('rows'), 'No rows in a staged response');
+        Assert.AreEqual(2, Staged.GetInteger('rowCount'), 'Staged row count');
+        Assert.AreEqual(3, Staged.GetArray('columns').Count(), 'Staged columns');
+        Assert.AreEqual('application/json', Staged.GetText('contentType'), 'Staged content type');
+        // [THEN] The staging row holds exactly the inline JSON shape, binary column as base64.
+        ByteSize := TakeStaged(Staged, StagedText, ContentType, FileName);
+        Assert.AreEqual(Staged.GetBigInteger('byteSize'), ByteSize, 'byteSize matches the staged bytes');
+        Assert.AreEqual('application/json', ContentType, 'Stored content type');
+        Assert.IsTrue(FileName.StartsWith('XODBCMSG-') and FileName.EndsWith('.json') and (StrLen(FileName) = StrLen('XODBCMSG-yyyyMMddHHmmss.json')), 'File name pattern: ' + FileName);
+        Expected.Add('columns', Inline.GetArray('columns'));
+        Expected.Add('rows', Inline.GetArray('rows'));
+        Expected.WriteTo(ExpectedText);
+        Assert.AreEqual(ExpectedText, StagedText, 'Staged content equals inline output');
+        Assert.AreEqual('AAECAwT/', Inline.GetArray('rows').GetObject(0).GetText('picture'), 'Binary stays base64 inline');
+        Assert.IsTrue(StagedText.Contains('"picture":"AAECAwT/"'), 'Binary stays base64 staged');
+    end;
+
+    local procedure VerifyInlineOutput()
+    var
+        Reply: JsonObject;
+    begin
+        // [GIVEN] A small result under the default 1 MB inline limit.
+        Mock.SetResponse(BinaryResultLbl);
+        // [WHEN] output is inline explicitly and by default.
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT id FROM demo","output":"inline"}');
+        // [THEN] The response is unchanged: rows present, no staging reference.
+        AssertSuccess(Reply);
+        Assert.IsFalse(Reply.GetBoolean('staged'), 'Not staged');
+        Assert.IsFalse(Reply.Contains('stagingId'), 'No stagingId inline');
+        Assert.AreEqual(2, Reply.GetArray('rows').Count(), 'Rows present');
+        Mock.SetResponse(BinaryResultLbl);
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT id FROM demo"}');
+        AssertSuccess(Reply);
+        Assert.IsFalse(Reply.GetBoolean('staged'), 'Default output is inline');
+        Assert.AreEqual(2, Reply.GetInteger('rowCount'), 'Inline row count');
+    end;
+
+    local procedure VerifyAutoStage()
+    var
+        Source: Record "ODBC Source ori";
+        Reply: JsonObject;
+        Row: JsonObject;
+        Rows: JsonArray;
+        Payload: JsonObject;
+        Body: Text;
+        StagedText: Text;
+        ContentType: Text;
+        FileName: Text;
+        LongText: Text;
+    begin
+        // [GIVEN] A source with a 1 KB inline limit and a result of about 3 KB.
+        Source.Get('XODBCMSG');
+        Assert.AreEqual(1024, Source."Inline Result Limit (KB)", 'Default inline limit is 1 MB');
+        Source."Inline Result Limit (KB)" := 1;
+        Source.Modify();
+        LongText := PadStr('', 1500, 'y');
+        Row.Add('long', LongText);
+        Rows.Add(Row);
+        Rows.Add(Row.Clone());
+        Payload.Add('columns', CreateColumns('long'));
+        Payload.Add('rows', Rows);
+        Payload.WriteTo(Body);
+        Mock.SetResponse(Body);
+        // [WHEN] The query runs with the default inline output.
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT long FROM demo"}');
+        // [THEN] It is staged automatically and nothing is truncated.
+        AssertSuccess(Reply);
+        Assert.IsTrue(Reply.GetBoolean('staged'), 'Auto-staged above the inline limit');
+        Assert.IsFalse(Reply.Contains('rows'), 'No rows when auto-staged');
+        Assert.IsFalse(Reply.GetBoolean('truncated'), 'Nothing truncated');
+        Assert.AreEqual(2, Reply.GetInteger('rowCount'), 'All rows staged');
+        TakeStaged(Reply, StagedText, ContentType, FileName);
+        Assert.AreEqual(2, StrLen(StagedText) - StrLen(StagedText.Replace(LongText, LongText.Substring(2))), 'Both full long values staged');
+    end;
+
+    local procedure VerifyStagedSizeCap()
+    var
+        Reply: JsonObject;
+        Row: JsonObject;
+        Rows: JsonArray;
+        Payload: JsonObject;
+        Body: Text;
+    begin
+        // [GIVEN] Two rows of 13.2 million characters each: above the 25 MB (26214400 bytes) staging cap.
+        Row.Add('long', PadStr('', 13200000, 'z'));
+        Rows.Add(Row);
+        Rows.Add(Row.Clone());
+        Payload.Add('columns', CreateColumns('long'));
+        Payload.Add('rows', Rows);
+        Payload.WriteTo(Body);
+        Clear(Rows);
+        Clear(Row);
+        Mock.SetResponse(Body);
+        Body := '';
+        // [WHEN] The query asks for staged output.
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT long FROM demo","output":"staged"}');
+        // [THEN] It fails with LimitExceeded naming the size and the limit, with a nextStep.
+        AssertProblem(Reply, 'LimitExceeded');
+        Assert.IsTrue(Reply.GetText('message').Contains(Format(26214400)), 'Message names the limit: ' + Reply.GetText('message'));
+        Assert.IsTrue(Reply.GetText('message').Contains(Format(26400053)), 'Message names the size: ' + Reply.GetText('message'));
+        Assert.IsTrue(Reply.GetText('nextStep').Contains('maxRows'), 'nextStep names maxRows');
+    end;
+
+    local procedure VerifyInvalidOutput()
+    var
+        Reply: JsonObject;
+    begin
+        // [WHEN] output is an unknown value or not a string.
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT 1","output":"file"}');
+        // [THEN] The request is refused before transport.
+        AssertProblem(Reply, 'InvalidParameter');
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT 1","output":true}');
+        AssertProblem(Reply, 'InvalidParameter');
+        AssertCalls(0);
+    end;
+
+    local procedure VerifyStagingIdIsolation()
+    var
+        BlobStaging: Codeunit "Blob Staging ori";
+        Reply: JsonObject;
+        StagingId: Guid;
+        StagedText: Text;
+        ContentType: Text;
+        FileName: Text;
+    begin
+        // [GIVEN] A staged result owned by the current user.
+        Mock.SetResponse(BinaryResultLbl);
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT id FROM demo","output":"staged"}');
+        AssertSuccess(Reply);
+        Evaluate(StagingId, Reply.GetText('stagingId'));
+        // [THEN] The owner resolves it; an id the user does not own does not resolve.
+        Assert.IsTrue(BlobStaging.Exists(StagingId), 'Owner can read the staging row');
+        Assert.IsFalse(BlobStaging.Exists(CreateGuid()), 'An id not owned by the user is not readable');
+        // [THEN] Taking it consumes it, so a second reader cannot use it.
+        TakeStaged(Reply, StagedText, ContentType, FileName);
+        Assert.IsFalse(BlobStaging.Exists(StagingId), 'Consumed row is gone');
+    end;
+
+    local procedure TakeStaged(Reply: JsonObject; var Content: Text; var ContentType: Text; var FileName: Text): BigInteger
+    var
+        BlobStaging: Codeunit "Blob Staging ori";
+        TempBlob: Codeunit "Temp Blob";
+        InStr: InStream;
+        StagingId: Guid;
+    begin
+        Assert.IsTrue(Evaluate(StagingId, Reply.GetText('stagingId')), 'stagingId is a GUID');
+        Assert.IsTrue(BlobStaging.Take(StagingId, TempBlob, ContentType, FileName), 'Staging row readable by its creator');
+        TempBlob.CreateInStream(InStr, TextEncoding::UTF8);
+        InStr.Read(Content);
+        exit(TempBlob.Length());
+    end;
+
+    local procedure CreateColumns(Name: Text) Columns: JsonArray
+    begin
+        Columns.Add(Name);
+    end;
+
     local procedure VerifyContracts()
     var
         Contracts: Codeunit "Msg Contract Mgt ori";
@@ -793,6 +1081,7 @@ codeunit 98140 "ODBC Messages Tst ori"
         Contract: JsonObject;
         Token: JsonToken;
         Ordinal: Integer;
+        ContractText: Text;
     begin
         for Ordinal := 10035517 to 10035520 do begin
             MessageType := Enum::"Message Type ori".FromInteger(Ordinal);
@@ -809,6 +1098,14 @@ codeunit 98140 "ODBC Messages Tst ori"
             AssertNoSecrets(Contract.AsToken());
             Clear(Contract);
         end;
+        // Story #18: the query contract declares output, the staged response fields and the playbook workflow.
+        Contracts.GetContract(Enum::"Message Type ori"::"ODBC.Query.Run", Contract);
+        Contract.WriteTo(ContractText);
+        Assert.IsTrue(ContractText.Contains('"output"'), 'output parameter');
+        Assert.IsTrue(ContractText.Contains('"stagingId"'), 'stagingId response field');
+        Assert.IsTrue(ContractText.Contains('"byteSize"'), 'byteSize response field');
+        Assert.IsTrue(ContractText.Contains('LimitExceeded'), 'Size cap error');
+        Assert.IsTrue(ContractText.Contains('@10.stagingId'), 'Playbook reference in workflow');
     end;
 
     local procedure VerifySourceList()
