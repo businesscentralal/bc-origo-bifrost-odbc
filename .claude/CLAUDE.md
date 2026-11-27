@@ -51,6 +51,7 @@ Tests: 98100-98199 (workbook sheet Test App Ranges, row 99014)
 | Codeunit | 10035523 | ODBC Read Statement ori |
 | Test codeunit | 98140 | ODBC Messages Tst ori |
 | Test API page | 98141 | ODBC MCP Fixture ori |
+| Test codeunit | 98142 | ODBC Staging Cap Stub ori |
 | Test codeunit | 98120 | ODBC Client Tst ori |
 | Test enum extension | 98121 | ODBC Mock Transport ori |
 | Test codeunit | 98122 | ODBC Mock Transport ori |

@@ -88,6 +88,7 @@ codeunit 10035521 "ODBC Message Handler ori"
         FileName: Text;
         ByteSize: BigInteger;
         LimitBytes: BigInteger;
+        MaxBytes: BigInteger;
         StagingId: Guid;
     begin
         Content.Add('columns', Response.GetArray('columns'));
@@ -101,8 +102,9 @@ codeunit 10035521 "ODBC Message Handler ori"
             Response.Add('staged', false);
             exit(true);
         end;
-        if ByteSize > MaxStagedBytes() then begin
-            Refuse(Argument, Enum::"Bifrost Error Code ori"::LimitExceeded, 'maxRows', StrSubstNo(TooLargeErr, ByteSize, MaxStagedBytes()), TooLargeNextStepLbl);
+        MaxBytes := MaxStagedBytes();
+        if ByteSize > MaxBytes then begin
+            Refuse(Argument, Enum::"Bifrost Error Code ori"::LimitExceeded, 'maxRows', StrSubstNo(TooLargeErr, ByteSize, MaxBytes), TooLargeNextStepLbl);
             exit(false);
         end;
         FileName := Source.Code + '-' + Format(CurrentDateTime(), 0, '<Year4><Month,2><Day,2><Hours24,2><Minutes,2><Seconds,2>') + '.json';
@@ -134,9 +136,17 @@ codeunit 10035521 "ODBC Message Handler ori"
     end;
 
     /// <summary>Largest staged result: the Foundation Blob Staging cap for MCP blobs, 25 MB.</summary>
-    local procedure MaxStagedBytes(): BigInteger
+    local procedure MaxStagedBytes() MaxBytes: BigInteger
     begin
-        exit(26214400);
+        MaxBytes := 26214400;
+        OnGetMaxStagedBytes(MaxBytes);
+    end;
+
+    /// <summary>Test seam: lets the test app lower the staging cap without building a 25 MB result.</summary>
+    /// <param name="MaxBytes">The staging cap in bytes.</param>
+    [InternalEvent(false)]
+    local procedure OnGetMaxStagedBytes(var MaxBytes: BigInteger)
+    begin
     end;
 
     [TryFunction]

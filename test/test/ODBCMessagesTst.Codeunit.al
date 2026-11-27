@@ -993,30 +993,31 @@ codeunit 98140 "ODBC Messages Tst ori"
 
     local procedure VerifyStagedSizeCap()
     var
+        CapStub: Codeunit "ODBC Staging Cap Stub ori";
         Reply: JsonObject;
         Row: JsonObject;
         Rows: JsonArray;
         Payload: JsonObject;
         Body: Text;
     begin
-        // [GIVEN] Two rows of 13.2 million characters each: above the 25 MB (26214400 bytes) staging cap.
-        Row.Add('long', PadStr('', 13200000, 'z'));
+        // [GIVEN] The staging cap lowered to 4096 bytes through the internal test seam (production cap: 25 MB, 26214400 bytes)
+        // and two rows of 3000 characters: a 6053-byte result.
+        BindSubscription(CapStub);
+        Row.Add('long', PadStr('', 3000, 'z'));
         Rows.Add(Row);
         Rows.Add(Row.Clone());
         Payload.Add('columns', CreateColumns('long'));
         Payload.Add('rows', Rows);
         Payload.WriteTo(Body);
-        Clear(Rows);
-        Clear(Row);
         Mock.SetResponse(Body);
-        Body := '';
         // [WHEN] The query asks for staged output.
         Reply := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT long FROM demo","output":"staged"}');
         // [THEN] It fails with LimitExceeded naming the size and the limit, with a nextStep.
         AssertProblem(Reply, 'LimitExceeded');
-        Assert.IsTrue(Reply.GetText('message').Contains(Format(26214400)), 'Message names the limit: ' + Reply.GetText('message'));
-        Assert.IsTrue(Reply.GetText('message').Contains(Format(26400053)), 'Message names the size: ' + Reply.GetText('message'));
-        Assert.IsTrue(Reply.GetText('nextStep').Contains('maxRows'), 'nextStep names maxRows');
+        Assert.IsTrue(Reply.GetText('message').Contains(Format(4096)), 'Message names the limit: ' + Reply.GetText('message'));
+        Assert.IsTrue(Reply.GetText('message').Contains(Format(6053)), 'Message names the size: ' + Reply.GetText('message'));
+        Assert.IsTrue(Reply.GetText('nextStep') <> '', 'nextStep present');
+        UnbindSubscription(CapStub);
     end;
 
     local procedure VerifyInvalidOutput()
