@@ -54,6 +54,7 @@ Tests: 98100-98199 (workbook sheet Test App Ranges, row 99014)
 | Test codeunit | 98120 | ODBC Client Tst ori |
 | Test enum extension | 98121 | ODBC Mock Transport ori |
 | Test codeunit | 98122 | ODBC Mock Transport ori |
+| Test codeunit | 98130 | ODBC Agent Crypto Tst ori |
 | Test codeunit | 98102 | ODBC Setup Tst ori |
 | Test codeunit | 98100 | ODBC Scaffold Tst ori |
 | Test permission set | 98101 | ODBC Setup Test ori |

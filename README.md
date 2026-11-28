@@ -9,8 +9,11 @@ Bifrost ODBC lets an agent read data from any ODBC data source next to the custo
 Oracle, MySQL, PostgreSQL, DB2, Access, Excel and others — through the Bifröst local agent and Azure Relay. Business
 Central never opens a database connection itself, and agents get read-only access.
 
-**Status:** setup, public AL API and the four read-only agent message types are implemented. The on-premises agent is tracked under
-businesscentralal/bifrost-support#36. The transport uses the JSON wire contract below; the matching agent must implement it.
+**Status:** setup, public AL API, the four read-only agent message types and the local ODBC agent source are implemented. The integrated message-type path and on-premises agent are tracked under businesscentralal/bifrost-support#36; agent signing and Windows SQL Server verification remain pending there.
+The transport uses the JSON wire contract below; the matching agent must implement it.
+
+The local Windows service lives in `agent/`. Installation: [English](agent/docs/install.en-US.md) /
+[Íslenska](agent/docs/install.is-IS.md). Read-only database credentials are mandatory; a statement filter alone is insufficient.
 
 Foundation discovers this app on **Bifrost Setup** through its application registry. Assign `BIFROST ODBC ori`,
 `BIFROST ODBCFull ori` or `BIFROST ODBCRead ori` alongside the appropriate Foundation role. The object allocation is
