@@ -1013,8 +1013,8 @@ codeunit 98140 "ODBC Messages Tst ori"
         UnbindSubscription(CapStub);
         // [THEN] It fails with LimitExceeded naming the size and the limit, with a nextStep.
         AssertProblem(Reply, 'LimitExceeded');
-        Assert.IsTrue(Reply.GetText('message').Contains(Format(1024)), 'Message names the limit: ' + Reply.GetText('message'));
-        Assert.IsTrue(Reply.GetText('message').Contains(Format(StrLen(ExpectedText))), 'Message names the size: ' + Reply.GetText('message'));
+        Assert.IsTrue(Reply.GetText('error').Contains(Format(1024)), 'Message names the limit: ' + Reply.GetText('error'));
+        Assert.IsTrue(Reply.GetText('error').Contains(Format(StrLen(ExpectedText))), 'Message names the size: ' + Reply.GetText('error'));
         Assert.IsTrue(Reply.GetText('nextStep') <> '', 'nextStep present');
     end;
 

@@ -274,9 +274,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType StagingIdFieldLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1453069156 - NamedType 2887506519" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Step 20: pass "stagingId": "@10.stagingId" to any type that takes a stagingId, for example to store the result as a file.</source>
-          <target>Skref 20: sendu "stagingId": "@10.stagingId" í hvaða tegund sem tekur stagingId, t.d. til að vista niðurstöðuna sem skrá.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Skref 20: sendu "stagingId": "@10.stagingId" í hvaða tegund sem tekur stagingId, t.d. til að vista niðurstöðuna sem skrá.</note>
+          <source>Step 20: pass "stagingId": "@10.stagingId" to any type that takes a stagingId, for example to store the result as a memory.</source>
+          <target>Skref 20: sendu "stagingId": "@10.stagingId" í hvaða tegund sem tekur stagingId, t.d. til að vista niðurstöðuna sem minni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skref 20: sendu "stagingId": "@10.stagingId" í hvaða tegund sem tekur stagingId, t.d. til að vista niðurstöðuna sem minni.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType WorkflowConsumerStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1453069156 - NamedType 187081499" size-unit="char" translate="yes" xml:space="preserve">
