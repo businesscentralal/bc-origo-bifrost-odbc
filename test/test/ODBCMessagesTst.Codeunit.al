@@ -957,67 +957,81 @@ codeunit 98140 "ODBC Messages Tst ori"
     var
         Source: Record "ODBC Source ori";
         Reply: JsonObject;
-        Row: JsonObject;
-        Rows: JsonArray;
-        Payload: JsonObject;
         Body: Text;
         StagedText: Text;
         ContentType: Text;
         FileName: Text;
-        LongText: Text;
     begin
-        // [GIVEN] A source with a 1 KB inline limit and a result of about 3 KB.
+        // [GIVEN] A source with a 1 KB inline limit and a result of 100 short rows, about 2 KB.
+        // Short cell values keep the per-value secret scan (RedactValue, quadratic in the value length) fast.
         Source.Get('XODBCMSG');
         Assert.AreEqual(1024, Source."Inline Result Limit (KB)", 'Default inline limit is 1 MB');
         Source."Inline Result Limit (KB)" := 1;
+        Source."Row Cap" := 500;
         Source.Modify();
-        LongText := PadStr('', 1500, 'y');
-        Row.Add('long', LongText);
-        Rows.Add(Row);
-        Rows.Add(Row.Clone());
-        Payload.Add('columns', CreateColumns('long'));
-        Payload.Add('rows', Rows);
-        Payload.WriteTo(Body);
+        Body := ShortRowsResult(100);
         Mock.SetResponse(Body);
         // [WHEN] The query runs with the default inline output.
-        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT long FROM demo"}');
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT short FROM demo"}');
         // [THEN] It is staged automatically and nothing is truncated.
         AssertSuccess(Reply);
         Assert.IsTrue(Reply.GetBoolean('staged'), 'Auto-staged above the inline limit');
         Assert.IsFalse(Reply.Contains('rows'), 'No rows when auto-staged');
         Assert.IsFalse(Reply.GetBoolean('truncated'), 'Nothing truncated');
-        Assert.AreEqual(2, Reply.GetInteger('rowCount'), 'All rows staged');
+        Assert.AreEqual(100, Reply.GetInteger('rowCount'), 'All rows staged');
         TakeStaged(Reply, StagedText, ContentType, FileName);
-        Assert.AreEqual(2, StrLen(StagedText) - StrLen(StagedText.Replace(LongText, LongText.Substring(2))), 'Both full long values staged');
+        Assert.AreEqual(100, (StrLen(StagedText) - StrLen(StagedText.Replace('"short":"yyyyyyyyyy"', ''))) div StrLen('"short":"yyyyyyyyyy"'), 'All 100 full values staged');
     end;
 
     local procedure VerifyStagedSizeCap()
     var
+        Source: Record "ODBC Source ori";
         CapStub: Codeunit "ODBC Staging Cap Stub ori";
         Reply: JsonObject;
+        Inline: JsonObject;
+        Expected: JsonObject;
+        Body: Text;
+        ExpectedText: Text;
+    begin
+        // [GIVEN] The staging cap lowered to 1024 bytes through the internal test seam (production cap: 25 MB, 26214400 bytes)
+        // and a result of 100 short rows, about 2 KB.
+        Source.Get('XODBCMSG');
+        Source."Row Cap" := 500;
+        Source.Modify();
+        Body := ShortRowsResult(100);
+        // The expected size is the staged JSON shape of the same result, read inline first.
+        Mock.SetResponse(Body);
+        Inline := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT short FROM demo"}');
+        AssertSuccess(Inline);
+        Expected.Add('columns', Inline.GetArray('columns'));
+        Expected.Add('rows', Inline.GetArray('rows'));
+        Expected.WriteTo(ExpectedText);
+        BindSubscription(CapStub);
+        Mock.SetResponse(Body);
+        // [WHEN] The query asks for staged output.
+        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT short FROM demo","output":"staged"}');
+        UnbindSubscription(CapStub);
+        // [THEN] It fails with LimitExceeded naming the size and the limit, with a nextStep.
+        AssertProblem(Reply, 'LimitExceeded');
+        Assert.IsTrue(Reply.GetText('message').Contains(Format(1024)), 'Message names the limit: ' + Reply.GetText('message'));
+        Assert.IsTrue(Reply.GetText('message').Contains(Format(StrLen(ExpectedText))), 'Message names the size: ' + Reply.GetText('message'));
+        Assert.IsTrue(Reply.GetText('nextStep') <> '', 'nextStep present');
+    end;
+
+    /// <summary>Builds an agent result of RowCount rows with one 10-character column, serialized exactly as the handler stages it.</summary>
+    local procedure ShortRowsResult(RowCount: Integer) Body: Text
+    var
         Row: JsonObject;
         Rows: JsonArray;
         Payload: JsonObject;
-        Body: Text;
+        Index: Integer;
     begin
-        // [GIVEN] The staging cap lowered to 4096 bytes through the internal test seam (production cap: 25 MB, 26214400 bytes)
-        // and two rows of 3000 characters: a 6053-byte result.
-        BindSubscription(CapStub);
-        Row.Add('long', PadStr('', 3000, 'z'));
-        Rows.Add(Row);
-        Rows.Add(Row.Clone());
-        Payload.Add('columns', CreateColumns('long'));
+        Row.Add('short', PadStr('', 10, 'y'));
+        for Index := 1 to RowCount do
+            Rows.Add(Row.Clone());
+        Payload.Add('columns', CreateColumns('short'));
         Payload.Add('rows', Rows);
         Payload.WriteTo(Body);
-        Mock.SetResponse(Body);
-        // [WHEN] The query asks for staged output.
-        Reply := Invoke(Enum::"Message Type ori"::"ODBC.Query.Run", '{"source":"XODBCMSG","sql":"SELECT long FROM demo","output":"staged"}');
-        // [THEN] It fails with LimitExceeded naming the size and the limit, with a nextStep.
-        AssertProblem(Reply, 'LimitExceeded');
-        Assert.IsTrue(Reply.GetText('message').Contains(Format(4096)), 'Message names the limit: ' + Reply.GetText('message'));
-        Assert.IsTrue(Reply.GetText('message').Contains(Format(6053)), 'Message names the size: ' + Reply.GetText('message'));
-        Assert.IsTrue(Reply.GetText('nextStep') <> '', 'nextStep present');
-        UnbindSubscription(CapStub);
     end;
 
     local procedure VerifyInvalidOutput()
