@@ -34,5 +34,6 @@ permissionset 98101 "ODBC Setup Test ori"
         codeunit "ODBC Client ori" = X,
         codeunit "ODBC Reader ori" = X,
         codeunit "ODBC Mock Transport ori" = X,
-        codeunit "ODBC Client Tst ori" = X;
+        codeunit "ODBC Client Tst ori" = X,
+        codeunit "ODBC Bifrost Tst ori" = X;
 }
