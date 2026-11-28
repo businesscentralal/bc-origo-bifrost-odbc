@@ -280,15 +280,15 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType WorkflowConsumerStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1453069156 - NamedType 187081499" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Step 10: run the query with output staged. The response holds the stagingId.</source>
-          <target>Skref 10: keyrðu fyrirspurnina með output staged. Svarið inniheldur stagingId.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Skref 10: keyrðu fyrirspurnina með output staged. Svarið inniheldur stagingId.</note>
+          <source>Step 10: run the query with output staged. Set Result Log Paths to stagingId&gt;stagingId so step 20 can read @10.stagingId.</source>
+          <target>Skref 10: keyrðu fyrirspurnina með output staged. Stilltu Niðurstöðuskráningarslóðir á stagingId&gt;stagingId svo skref 20 geti lesið @10.stagingId.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skref 10: keyrðu fyrirspurnina með output staged. Stilltu Niðurstöðuskráningarslóðir á stagingId&gt;stagingId svo skref 20 geti lesið @10.stagingId.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType WorkflowQueryStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1453069156 - NamedType 1795475856" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Orchestrator playbooks run every step as the same user and company, so a later step can read the staged row without extra code. The row is used up when a consumer takes it; unused rows are removed by the Foundation Blob Staging retention policy.</source>
-          <target>Orchestrator-leikbækur keyra hvert skref sem sami notandi og fyrirtæki, svo síðara skref getur lesið vistuðu línuna án aukakóða. Línan er notuð upp þegar viðtakandi tekur hana; ónotaðar línur eru fjarlægðar af varðveislustefnu Blob Staging í Foundation.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Orchestrator-leikbækur keyra hvert skref sem sami notandi og fyrirtæki, svo síðara skref getur lesið vistuðu línuna án aukakóða. Línan er notuð upp þegar viðtakandi tekur hana; ónotaðar línur eru fjarlægðar af varðveislustefnu Blob Staging í Foundation.</note>
+          <source>Add the Success condition status Equals Success to both steps. Orchestrator playbooks run every step as the same user and company, so a later step can read the staged row without extra code. The row is used up when a consumer takes it; unused rows are removed by the Foundation Blob Staging retention policy.</source>
+          <target>Bættu árangursskilyrðinu status Equals Success við bæði skrefin. Orchestrator-leikbækur keyra hvert skref sem sami notandi og fyrirtæki, svo síðara skref getur lesið vistuðu línuna án aukakóða. Línan er notuð upp þegar viðtakandi tekur hana; ónotaðar línur eru fjarlægðar af varðveislustefnu Blob Staging í Foundation.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bættu árangursskilyrðinu status Equals Success við bæði skrefin. Orchestrator-leikbækur keyra hvert skref sem sami notandi og fyrirtæki, svo síðara skref getur lesið vistuðu línuna án aukakóða. Línan er notuð upp þegar viðtakandi tekur hana; ónotaðar línur eru fjarlægðar af varðveislustefnu Blob Staging í Foundation.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType WorkflowTextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1223423167 - NamedType 2802359765" size-unit="char" translate="yes" xml:space="preserve">

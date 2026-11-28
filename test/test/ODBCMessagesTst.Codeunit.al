@@ -1121,6 +1121,8 @@ codeunit 98140 "ODBC Messages Tst ori"
         Assert.IsTrue(ContractText.Contains('"byteSize"'), 'byteSize response field');
         Assert.IsTrue(ContractText.Contains('LimitExceeded'), 'Size cap error');
         Assert.IsTrue(ContractText.Contains('@10.stagingId'), 'Playbook reference in workflow');
+        Assert.IsTrue(ContractText.Contains('stagingId>stagingId'), 'Workflow stores the staging id before a later step reads it');
+        Assert.IsTrue(ContractText.Contains('status Equals Success'), 'Workflow checks message success on both steps');
     end;
 
     local procedure VerifySourceList()
