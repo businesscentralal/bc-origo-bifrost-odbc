@@ -1,0 +1,114 @@
+name: ODBC agent
+
+# Builds and tests the Bifröst ODBC local agent (agent/, .NET 8). Issue #13.
+# Tests run on Linux with the SQLite ODBC driver from Ubuntu's signed package repository (same setup the workers use).
+# The Windows service is published as an unsigned self-contained win-x64 folder; signing happens at release
+# (agent/Package-SignedAgent.ps1), like the unsigned AL PR builds.
+
+on:
+  pull_request:
+    paths:
+      - 'agent/**'
+      - '.github/workflows/OdbcAgent.yaml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'agent/**'
+      - '.github/workflows/OdbcAgent.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: odbc-agent-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test the ODBC agent (Linux, SQLite ODBC)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for agent sources
+        id: agent
+        shell: bash
+        run: |
+          if [ -f agent/Build-Agent.ps1 ]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; echo "No agent/ sources on this ref; nothing to build."; fi
+
+      - name: Set up .NET 8
+        if: steps.agent.outputs.present == 'true'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install unixODBC and the SQLite ODBC driver
+        if: steps.agent.outputs.present == 'true'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq unixodbc libsqliteodbc
+          odbcinst -q -d
+
+      - name: Build and test (Build-Agent.ps1, linux-x64)
+        if: steps.agent.outputs.present == 'true'
+        shell: pwsh
+        env:
+          BIFROST_TEST_SQLITE_DRIVER: SQLite3
+        run: ./agent/Build-Agent.ps1 -Runtime linux-x64 -OutputDirectory "$env:RUNNER_TEMP/agent-out"
+
+      - name: Upload test results
+        if: always() && steps.agent.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: odbc-agent-test-results-${{ github.sha }}
+          path: ${{ runner.temp }}/agent-out/tests
+          if-no-files-found: warn
+          retention-days: 30
+
+  publish-windows:
+    name: Publish the Windows agent (win-x64, unsigned)
+    needs: test
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for agent sources
+        id: agent
+        shell: bash
+        run: |
+          if [ -f agent/Build-Agent.ps1 ]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; echo "No agent/ sources on this ref; nothing to build."; fi
+
+      - name: Set up .NET 8
+        if: steps.agent.outputs.present == 'true'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish (unsigned)
+        if: steps.agent.outputs.present == 'true'
+        shell: pwsh
+        run: |
+          $out = Join-Path $env:RUNNER_TEMP 'agent-out'
+          dotnet publish agent/src/Bifrost.Odbc.Agent.csproj --configuration Release --runtime win-x64 --self-contained true --output (Join-Path $out 'win-x64')
+          if ($LASTEXITCODE -ne 0) { throw 'Agent publish failed.' }
+          @{ sourceSha = '${{ github.sha }}'; runtime = 'win-x64'; signed = $false } | ConvertTo-Json |
+            Set-Content -LiteralPath (Join-Path $out 'win-x64/build.json') -Encoding utf8
+          Get-ChildItem -LiteralPath (Join-Path $out 'win-x64') -File -Recurse | Sort-Object FullName |
+            ForEach-Object { '{0}  {1}' -f (Get-FileHash -Algorithm SHA256 -LiteralPath $_.FullName).Hash.ToLowerInvariant(), $_.FullName.Substring($out.Length + 1).Replace('\', '/') } |
+            Set-Content -LiteralPath (Join-Path $out 'SHA256SUMS.txt') -Encoding utf8
+
+      - name: Upload agent (unsigned) and checksums
+        if: steps.agent.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: odbc-agent-win-x64-unsigned-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/agent-out/win-x64
+            ${{ runner.temp }}/agent-out/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 30

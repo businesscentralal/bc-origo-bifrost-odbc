@@ -48,6 +48,21 @@ codeunit 98122 "ODBC Mock Transport ori" implements "ODBC Transport ori"
         LastOperation := Operation;
         if RaiseFailure then
             Error('Mock failure: Driver={Mock};Server=example.invalid;Password=x-unit-only; MDEyMzQ1Njc4OWFiY2RlZg== fake-relay-key');
+        if Source.Code = 'XODBCMCP' then begin
+            if not Request.GetBoolean('readOnly') then
+                Error('The MCP fixture requires readOnly=true.');
+            case Operation of
+                'TestConnection':
+                    Response.ReadFrom('{"driverName":"Mock ODBC=value","dbmsName":"MockDB","dbmsVersion":"1.0"}');
+                'GetSchema':
+                    Response.ReadFrom('{"dbmsName":"MockDB","objects":[{"name":"https://public.invalid/demo","type":"TABLE","columns":[{"name":"id","type":"INTEGER","nullable":false}]}]}');
+                'Query':
+                    Response.ReadFrom('{"columns":["id","url","pair","secret"],"rows":[{"id":7,"url":"https://public.invalid/docs","pair":"key=value","secret":"prefix fake-relay-key suffix","note":"key=value https://example.org/a"},{"id":8},{"id":9}]}');
+                else
+                    Error('The MCP fixture supports reads only.');
+            end;
+            exit;
+        end;
         Response := Reply.Clone().AsObject();
     end;
 

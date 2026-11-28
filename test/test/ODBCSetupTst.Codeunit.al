@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.ODBC.Test;
 
+using Origo.Bifrost;
 using Origo.Bifrost.ODBC;
 using System.TestLibraries.Security.AccessControl;
 using System.TestLibraries.Utilities;
@@ -402,21 +403,52 @@ codeunit 98102 "ODBC Setup Tst ori"
         RelayConnection: Record "ODBC Relay Connection ori";
         ODBCSource: Record "ODBC Source ori";
         TestSource: Record "ODBC Source ori";
+        TempArgument: Record "Message Argument ori" temporary;
+        Handler: Codeunit "ODBC Message Handler ori";
+        Mock: Codeunit "ODBC Mock Transport ori";
+        Request: JsonObject;
+        Reply: JsonObject;
+        TestKey: SecretText;
+        TestKeyText: Text;
         PreviousLanguage: Integer;
         CanEdit: Boolean;
         CanRead: Boolean;
     begin
         Initialize();
         CreateCompleteSource(ODBCSource);
+        ODBCSource.Transport := ODBCSource.Transport::Mock;
+        ODBCSource."AES Vector" := 'MDEyMzQ1Njc4OWFiY2RlZg==';
+        ODBCSource.Modify();
+        TestKeyText := 'MDEyMzQ1Njc4OWFiY2RlZg==';
+        TestKey := TestKeyText;
+        SecretMgt.SetSecret(ODBCSource.SystemId, Enum::"ODBC Secret Kind ori"::AesKey, TestKey);
+        Mock.Reset();
+        Mock.SetResponse('{"driverName":"Mock ODBC","dbmsName":"MockDB","dbmsVersion":"1.0"}');
+        Request.Add('source', SourceCodeTok);
+        TempArgument.Init();
+        TempArgument.Insert();
+        TempArgument.SetRequestJson(Request);
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
         LowerPermissions.SetExactPermissionSet('BIFROST ODBCRead ori');
         CanRead := TestSource.ReadPermission() and RelayConnection.ReadPermission();
         CanEdit := TestSource.WritePermission() or RelayConnection.WritePermission();
         Assert.IsTrue(TestSource.Get(SourceCodeTok), 'The Read role must read the source.');
+        // [WHEN] The read role invokes the identity cache through the message handler.
+        // Direct handler call isolates table permission checks from Foundation dispatch permissions.
+        Handler.Execute(Enum::"Message Type ori"::"ODBC.Source.Test", TempArgument);
+        Reply := TempArgument.GetResponseJson();
+        Assert.AreEqual('Success', Reply.GetText('status'), 'Read-role source test succeeds');
+        TestSource.Get(SourceCodeTok);
+        Assert.AreEqual('Mock ODBC', TestSource."Driver Name", 'Read-role test caches driver');
+        Assert.AreEqual('MockDB', TestSource."DBMS Name", 'Read-role test caches DBMS');
+        Assert.IsTrue(TestSource."Read Only", 'Cache preserves read-only control');
+        Assert.IsFalse(TestSource.Blocked, 'Cache preserves blocked control');
+        Assert.IsFalse(TestSource.WritePermission(), 'Cache grants no write permission to its caller');
         TestSource.Blocked := true;
         asserterror TestSource.Modify();
         LowerPermissions.SetOutsideO365Scope();
+        Mock.Reset();
         GlobalLanguage(PreviousLanguage);
         Assert.IsTrue(CanRead, 'The Read role must have read permission.');
         Assert.IsFalse(CanEdit, 'The Read role must not have write permission.');

@@ -61,6 +61,11 @@ table 10035493 "ODBC Source ori"
         {
             Caption = 'Transport', Comment = 'is-IS=Flutningsleið';
         }
+        field(12; "DBMS Name"; Text[100])
+        {
+            Caption = 'DBMS name', Comment = 'is-IS=Heiti gagnagrunnskerfis';
+            Editable = false;
+        }
         field(10; "Driver Name"; Text[100])
         {
             Caption = 'Driver / DBMS name', Comment = 'is-IS=Heiti rekils / gagnagrunnskerfis';

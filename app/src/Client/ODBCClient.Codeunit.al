@@ -17,7 +17,25 @@ codeunit 10035506 "ODBC Client ori"
         Response: JsonObject;
     begin
         Clear(Reader);
-        Call(SourceCode, 'Query', SQL, Parameters, Response, Reader);
+        Call(SourceCode, 'Query', SQL, Parameters, Response, Reader, 0);
+    end;
+
+    /// <summary>Runs a read-only query with a per-call cap no greater than the source cap.</summary>
+    /// <param name="SourceCode">Configured source.</param>
+    /// <param name="SQL">Read statement.</param>
+    /// <param name="Parameters">Ordered parameter values.</param>
+    /// <param name="MaxRows">Positive cap, no greater than the source row cap.</param>
+    /// <param name="Reader">Result cursor.</param>
+    procedure Query(SourceCode: Code[20]; SQL: Text; Parameters: JsonArray; MaxRows: Integer; var Reader: Codeunit "ODBC Reader ori")
+    var
+        Source: Record "ODBC Source ori";
+        Response: JsonObject;
+    begin
+        Clear(Reader);
+        Source.Get(SourceCode);
+        if (MaxRows < 1) or (MaxRows > Source."Row Cap") then
+            Error(InvalidLimitsErr);
+        Call(SourceCode, 'Query', SQL, Parameters, Response, Reader, MaxRows);
     end;
 
     /// <summary>Executes SQL only when Read Only is disabled. This API is for AL callers, never an agent message type.</summary>
@@ -31,7 +49,7 @@ codeunit 10035506 "ODBC Client ori"
         Response: JsonObject;
         Token: JsonToken;
     begin
-        Call(SourceCode, 'Execute', SQL, Parameters, Response, Reader);
+        Call(SourceCode, 'Execute', SQL, Parameters, Response, Reader, 0);
         Response.Get('affectedRows', Token);
         exit(Token.AsValue().AsInteger());
     end;
@@ -50,7 +68,7 @@ codeunit 10035506 "ODBC Client ori"
         Clear(DriverName);
         Clear(DbmsName);
         Clear(DbmsVersion);
-        Call(SourceCode, 'TestConnection', '', Parameters, Response, Reader);
+        Call(SourceCode, 'TestConnection', '', Parameters, Response, Reader, 0);
         DriverName := Response.GetText('driverName');
         DbmsName := Response.GetText('dbmsName');
         DbmsVersion := Response.GetText('dbmsVersion');
@@ -67,11 +85,36 @@ codeunit 10035506 "ODBC Client ori"
         Response: JsonObject;
     begin
         Clear(Result);
-        Call(SourceCode, 'GetSchema', ObjectFilter, Parameters, Response, Reader);
+        Call(SourceCode, 'GetSchema', ObjectFilter, Parameters, Response, Reader, 0);
         Result := Response.GetArray('objects');
     end;
 
-    local procedure Call(SourceCode: Code[20]; Operation: Text; SQL: Text; Parameters: JsonArray; var Response: JsonObject; var Reader: Codeunit "ODBC Reader ori")
+    /// <summary>Returns schema together with the database dialect identity.</summary>
+    /// <param name="SourceCode">Configured source.</param>
+    /// <param name="ObjectFilter">Catalog object filter.</param>
+    /// <param name="Result">Catalog objects.</param>
+    /// <param name="DbmsName">DBMS reported by the agent, or the last tested identity.</param>
+    procedure GetSchema(SourceCode: Code[20]; ObjectFilter: Text; var Result: JsonArray; var DbmsName: Text)
+    var
+        Source: Record "ODBC Source ori";
+        Reader: Codeunit "ODBC Reader ori";
+        Parameters: JsonArray;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        Clear(Result);
+        Clear(DbmsName);
+        Call(SourceCode, 'GetSchema', ObjectFilter, Parameters, Response, Reader, 0);
+        Result := Response.GetArray('objects');
+        if Response.Get('dbmsName', Token) then
+            DbmsName := Token.AsValue().AsText()
+        else begin
+            Source.Get(SourceCode);
+            DbmsName := Source."DBMS Name";
+        end;
+    end;
+
+    local procedure Call(SourceCode: Code[20]; Operation: Text; SQL: Text; Parameters: JsonArray; var Response: JsonObject; var Reader: Codeunit "ODBC Reader ori"; MaxRows: Integer)
     var
         Source: Record "ODBC Source ori";
         SecretMgt: Codeunit "ODBC Secret Mgt ori";
@@ -82,7 +125,7 @@ codeunit 10035506 "ODBC Client ori"
     begin
         StartedAt := CurrentDateTime();
         ClearLastError();
-        Success := TryCall(SourceCode, Operation, SQL, Parameters, Response, Reader);
+        Success := TryCall(SourceCode, Operation, SQL, Parameters, Response, Reader, MaxRows);
         if not Success then begin
             if not Source.Get(SourceCode) then
                 Source.Init();
@@ -101,7 +144,7 @@ codeunit 10035506 "ODBC Client ori"
     end;
 
     [TryFunction]
-    local procedure TryCall(SourceCode: Code[20]; Operation: Text; SQL: Text; Parameters: JsonArray; var Response: JsonObject; var Reader: Codeunit "ODBC Reader ori")
+    local procedure TryCall(SourceCode: Code[20]; Operation: Text; SQL: Text; Parameters: JsonArray; var Response: JsonObject; var Reader: Codeunit "ODBC Reader ori"; MaxRows: Integer)
     var
         Source: Record "ODBC Source ori";
         Validation: Codeunit "ODBC Setup Validation ori";
@@ -128,6 +171,8 @@ codeunit 10035506 "ODBC Client ori"
             Request.Replace('query', SQL);
         Request.Add('parameters', Parameters);
         Request.Add('readOnly', Operation <> 'Execute');
+        if MaxRows > 0 then
+            Source."Row Cap" := MaxRows;
         Request.Add('rowCap', Source."Row Cap");
         Request.Add('timeoutSeconds', Source."Timeout (s)");
         EncryptedConnection := SecretMgt.EncryptConnection(Source);

@@ -9,8 +9,8 @@ Bifrost ODBC lets an agent read data from any ODBC data source next to the custo
 Oracle, MySQL, PostgreSQL, DB2, Access, Excel and others — through the Bifröst local agent and Azure Relay. Business
 Central never opens a database connection itself, and agents get read-only access.
 
-**Status:** setup, public AL API and local ODBC agent source implemented. Agent signing/Windows SQL Server verification
-and the integrated message-type path remain pending under businesscentralal/bifrost-support#36.
+**Status:** setup, public AL API, the four read-only agent message types and the local ODBC agent source are implemented. The integrated message-type path and on-premises agent are tracked under businesscentralal/bifrost-support#36; agent signing and Windows SQL Server verification remain pending there.
+The transport uses the JSON wire contract below; the matching agent must implement it.
 
 The local Windows service lives in `agent/`. Installation: [English](agent/docs/install.en-US.md) /
 [Íslenska](agent/docs/install.is-IS.md). Read-only database credentials are mandatory; a statement filter alone is insufficient.
@@ -18,6 +18,26 @@ The local Windows service lives in `agent/`. Installation: [English](agent/docs/
 Foundation discovers this app on **Bifrost Setup** through its application registry. Assign `BIFROST ODBC ori`,
 `BIFROST ODBCFull ori` or `BIFROST ODBCRead ori` alongside the appropriate Foundation role. The object allocation is
 recorded in [.claude/CLAUDE.md](.claude/CLAUDE.md).
+
+## Read ODBC data through the queue
+
+```json
+{"specversion":"1.0","type":"ODBC.Query.Run","data":{"source":"XDEMO","sql":"SELECT id FROM Products WHERE id = ?","parameters":[7],"maxRows":10}}
+```
+
+Submit to `POST /queues`. Foundation meters each call. Use `ODBC.Source.List` to discover source codes,
+`ODBC.Source.Test` to test a source and cache its public driver/DBMS identity, and `ODBC.Schema.Get` with
+`source` and optional `objectFilter` to read tables, views and columns with the DBMS dialect.
+`ODBC.Query.Run` requires `source` and one `sql` SELECT. `parameters` is an optional array of scalar values or null
+in positional `?` order; its length must match the placeholders. `maxRows` is a positive integer no greater than
+Row Cap; omitted uses Row Cap. Both source modes send `readOnly=true`. Results contain `columns`, `rows`,
+`rowCount` and `truncated`; JSON nulls and scalar types are preserved.
+
+Write/DDL/EXEC keywords, SELECT INTO, comments, statement delimiters, ambiguous dollar/backslash quoting and a second top-level SELECT are refused
+before transport with `InvalidParameter`. The conservative guard may refuse SQL that a driver could read safely;
+the agent/driver must also enforce read-only access. Unknown sources return `RecordNotFound`; blocked sources
+return `PreconditionFailed`. Every typed error includes `nextStep`. Queued request bodies are redacted after parsing;
+responses redact stored connection strings, DSN secrets and keys. Help and discovery are available in English and Icelandic.
 
 ## Public AL API
 
