@@ -35,6 +35,14 @@ page 98141 "ODBC MCP Fixture ori"
                 {
                     Caption = 'Blocked', Locked = true;
                 }
+                field(rowCap; Rec."Row Cap")
+                {
+                    Caption = 'Row cap', Locked = true;
+                }
+                field(inlineResultLimitKB; Rec."Inline Result Limit (KB)")
+                {
+                    Caption = 'Inline result limit (KB)', Locked = true;
+                }
                 field(readOnly; Rec."Read Only")
                 {
                     Caption = 'Read only', Locked = true;

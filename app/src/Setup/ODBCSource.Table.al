@@ -57,6 +57,13 @@ table 10035493 "ODBC Source ori"
             InitValue = 60;
             MinValue = 1;
         }
+        field(13; "Inline Result Limit (KB)"; Integer)
+        {
+            Caption = 'Inline result limit (KB)', Comment = 'is-IS=Hámark beinnar niðurstöðu (KB)';
+            InitValue = 1024;
+            MinValue = 1;
+            MaxValue = 15360;
+        }
         field(11; Transport; Enum "ODBC Transport ori")
         {
             Caption = 'Transport', Comment = 'is-IS=Flutningsleið';
@@ -87,6 +94,8 @@ table 10035493 "ODBC Source ori"
             "Row Cap" := 10000;
         if "Timeout (s)" = 0 then
             "Timeout (s)" := 60;
+        if "Inline Result Limit (KB)" = 0 then
+            "Inline Result Limit (KB)" := 1024;
     end;
 
     trigger OnDelete()

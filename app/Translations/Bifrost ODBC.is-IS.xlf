@@ -135,6 +135,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Heiti rekils / gagnagrunnskerfis</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Source ori - Field Driver Name - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 2306967109 - Field 2045363759 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Inline result limit (KB)</source>
+          <target>Hámark beinnar niðurstöðu (KB)</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hámark beinnar niðurstöðu (KB)</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table ODBC Source ori - Field Inline Result Limit (KB) - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 2306967109 - Field 865398282 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Read only</source>
           <target>Eingöngu lestur</target>
@@ -207,11 +213,83 @@
           <note from="Developer" annotates="general" priority="2">%1 = redacted transport diagnostic; is-IS=ODBC-flutningur mistókst: %1</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Client ori - NamedType TransportErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1453069156 - NamedType 176122401" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Staged only. Size of the staged UTF-8 JSON in bytes.</source>
+          <target>Aðeins við vistun. Stærð vistaðs UTF-8 JSON í bætum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins við vistun. Stærð vistaðs UTF-8 JSON í bætum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType ByteSizeFieldLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1453069156 - NamedType 842767075" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Staged only. Always application/json. The staged content is {"columns":[...],"rows":[...]}, the same shape as inline output, with binary columns as base64.</source>
+          <target>Aðeins við vistun. Alltaf application/json. Vistað efni er {"columns":[...],"rows":[...]}, sama lögun og bein niðurstaða, með tvíundardálka sem base64.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins við vistun. Alltaf application/json. Vistað efni er {"columns":[...],"rows":[...]}, sama lögun og bein niðurstaða, með tvíundardálka sem base64.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType ContentTypeFieldLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1453069156 - NamedType 1752644652" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Lower maxRows or filter the SELECT with a WHERE clause or fewer columns, then retry.</source>
+          <target>Lækkaðu maxRows eða síaðu SELECT-setninguna með WHERE-skilyrði eða færri dálkum og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lækkaðu maxRows eða síaðu SELECT-setninguna með WHERE-skilyrði eða færri dálkum og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType LimitErrorFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1453069156 - NamedType 516490085" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The result is larger than the Blob Staging limit of 25 MB (26214400 bytes). The message names the size and the limit.</source>
+          <target>Niðurstaðan er stærri en 25 MB (26214400 bæta) hámark Blob Staging. Skilaboðin nefna stærðina og hámarkið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Niðurstaðan er stærri en 25 MB (26214400 bæta) hámark Blob Staging. Skilaboðin nefna stærðina og hámarkið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType LimitErrorWhenLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1453069156 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
           <source>Submit to POST /queues. Foundation meters every call. ODBC sources are read-only for agents, including sources that allow AL writes. Use positional ? parameters; never concatenate values into SQL. Responses redact stored connection secrets. Source.Test caches public identity. Licence-path checks are performed before release.</source>
           <target>Sendu á POST /queues. Foundation mælir hvert kall. ODBC-uppsprettur eru eingöngu til lestrar fyrir miðlara, einnig þær sem leyfa AL-skrif. Notaðu stika í röð með ?; aldrei skeyta gildum inn í SQL. Svör fela geymd tengileyndarmál. Source.Test vistar opinbert auðkenni. Leyfisleiðir eru prófaðar fyrir útgáfu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu á POST /queues. Foundation mælir hvert kall. ODBC-uppsprettur eru eingöngu til lestrar fyrir miðlara, einnig þær sem leyfa AL-skrif. Notaðu stika í röð með ?; aldrei skeyta gildum inn í SQL. Svör fela geymd tengileyndarmál. Source.Test vistar opinbert auðkenni. Leyfisleiðir eru prófaðar fyrir útgáfu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1453069156 - NamedType 28450734" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inline (default) returns rows in the response; a result larger than the source Inline Result Limit (KB) is staged automatically. staged always stores the full result as one Blob Staging row and returns its stagingId. Nothing is truncated beyond maxRows.</source>
+          <target>inline (sjálfgefið) skilar línum í svarinu; niðurstaða sem er stærri en Hámark beinnar niðurstöðu (KB) uppsprettunnar er sjálfkrafa vistuð í Blob Staging. staged vistar alltaf alla niðurstöðuna sem eina Blob Staging-línu og skilar stagingId hennar. Ekkert er stytt umfram maxRows.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=inline (sjálfgefið) skilar línum í svarinu; niðurstaða sem er stærri en Hámark beinnar niðurstöðu (KB) uppsprettunnar er sjálfkrafa vistuð í Blob Staging. staged vistar alltaf alla niðurstöðuna sem eina Blob Staging-línu og skilar stagingId hennar. Ekkert er stytt umfram maxRows.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType OutputParamLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1453069156 - NamedType 602900467" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Inline only. Objects keyed by column name; scalar JSON types and null are preserved; binary columns are base64.</source>
+          <target>Aðeins bein niðurstaða. Hlutir með dálkaheiti sem lykil; JSON-tegundir og null haldast; tvíundardálkar eru base64.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins bein niðurstaða. Hlutir með dálkaheiti sem lykil; JSON-tegundir og null haldast; tvíundardálkar eru base64.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType RowsFieldLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1453069156 - NamedType 3451411438" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Stage a large result</source>
+          <target>Vista stóra niðurstöðu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vista stóra niðurstöðu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType StagedExampleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1453069156 - NamedType 2589007860" size-unit="char" translate="yes" xml:space="preserve">
+          <source>True when the result was stored in Blob Staging (output staged, or inline above the source limit); then rows is absent. False for an inline result.</source>
+          <target>Satt þegar niðurstaðan var vistuð í Blob Staging (output staged, eða inline yfir hámarki uppsprettu); þá vantar rows. Ósatt fyrir beina niðurstöðu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Satt þegar niðurstaðan var vistuð í Blob Staging (output staged, eða inline yfir hámarki uppsprettu); þá vantar rows. Ósatt fyrir beina niðurstöðu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType StagedFieldLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1453069156 - NamedType 1234342744" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Staged only. SystemId of the Blob Staging row in the current company, readable only by the user who ran the query. Pass it to a later step as stagingId, for example @10.stagingId in an Orchestrator playbook.</source>
+          <target>Aðeins við vistun. SystemId Blob Staging-línunnar í núverandi fyrirtæki, aðeins læsileg þeim notanda sem keyrði fyrirspurnina. Sendu hana í síðara skref sem stagingId, t.d. @10.stagingId í Orchestrator-leikbók.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins við vistun. SystemId Blob Staging-línunnar í núverandi fyrirtæki, aðeins læsileg þeim notanda sem keyrði fyrirspurnina. Sendu hana í síðara skref sem stagingId, t.d. @10.stagingId í Orchestrator-leikbók.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType StagingIdFieldLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1453069156 - NamedType 2887506519" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Step 20: pass "stagingId": "@10.stagingId" to any type that takes a stagingId, for example to store the result as a memory.</source>
+          <target>Skref 20: sendu "stagingId": "@10.stagingId" í hvaða tegund sem tekur stagingId, t.d. til að vista niðurstöðuna sem minni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skref 20: sendu "stagingId": "@10.stagingId" í hvaða tegund sem tekur stagingId, t.d. til að vista niðurstöðuna sem minni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType WorkflowConsumerStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1453069156 - NamedType 187081499" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Step 10: run the query with output staged. Set Result Log Paths to stagingId&gt;stagingId so step 20 can read @10.stagingId.</source>
+          <target>Skref 10: keyrðu fyrirspurnina með output staged. Stilltu Niðurstöðuskráningarslóðir á stagingId&gt;stagingId svo skref 20 geti lesið @10.stagingId.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skref 10: keyrðu fyrirspurnina með output staged. Stilltu Niðurstöðuskráningarslóðir á stagingId&gt;stagingId svo skref 20 geti lesið @10.stagingId.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType WorkflowQueryStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1453069156 - NamedType 1795475856" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Add the Success condition status Equals Success to both steps. Orchestrator playbooks run every step as the same user and company, so a later step can read the staged row without extra code. The row is used up when a consumer takes it; unused rows are removed by the Foundation Blob Staging retention policy.</source>
+          <target>Bættu árangursskilyrðinu status Equals Success við bæði skrefin. Orchestrator-leikbækur keyra hvert skref sem sami notandi og fyrirtæki, svo síðara skref getur lesið vistuðu línuna án aukakóða. Línan er notuð upp þegar viðtakandi tekur hana; ónotaðar línur eru fjarlægðar af varðveislustefnu Blob Staging í Foundation.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bættu árangursskilyrðinu status Equals Success við bæði skrefin. Orchestrator-leikbækur keyra hvert skref sem sami notandi og fyrirtæki, svo síðara skref getur lesið vistuðu línuna án aukakóða. Línan er notuð upp þegar viðtakandi tekur hana; ónotaðar línur eru fjarlægðar af varðveislustefnu Blob Staging í Foundation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Contract Parts ori - NamedType WorkflowTextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1223423167 - NamedType 2802359765" size-unit="char" translate="yes" xml:space="preserve">
           <source>Check the source setup and agent availability, then retry.</source>
@@ -260,6 +338,18 @@
           <target>Sendu kóða skilgreindrar ODBC-uppsprettu, að hámarki 20 stafi.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu kóða skilgreindrar ODBC-uppsprettu, að hámarki 20 stafi.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Message Handler ori - NamedType SourceRequiredLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1223423167 - NamedType 2296006256" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The query result is %1 bytes, which exceeds the Blob Staging limit of %2 bytes.</source>
+          <target>Niðurstaða fyrirspurnarinnar er %1 bæti, sem er yfir %2 bæta hámarki Blob Staging.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = result size in bytes, %2 = limit in bytes, is-IS=Niðurstaða fyrirspurnarinnar er %1 bæti, sem er yfir %2 bæta hámarki Blob Staging.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Message Handler ori - NamedType TooLargeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1223423167 - NamedType 638776138" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Lower maxRows or filter the SELECT with a WHERE clause or fewer columns, then retry.</source>
+          <target>Lækkaðu maxRows eða síaðu SELECT-setninguna með WHERE-skilyrði eða færri dálkum og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lækkaðu maxRows eða síaðu SELECT-setninguna með WHERE-skilyrði eða færri dálkum og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit ODBC Message Handler ori - NamedType TooLargeNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1223423167 - NamedType 204139052" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ask an administrator to unblock the source before retrying.</source>
@@ -674,6 +764,12 @@
           <target>Tilgreinir að uppsprettan sé læst og ekki hægt að nota hana.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir að uppsprettan sé læst og ekki hægt að nota hana.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control Blocked - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4203541481 - Control 2045363759 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the largest query result, in KB of JSON, that ODBC.Query.Run returns inline. Larger results are stored in Blob Staging and the response returns a stagingId. The default is 1024 KB and the maximum is 15360 KB.</source>
+          <target>Tilgreinir stærstu niðurstöðu fyrirspurnar, í KB af JSON, sem ODBC.Query.Run skilar beint. Stærri niðurstöður eru vistaðar í Blob Staging og svarið skilar stagingId. Sjálfgefið er 1024 KB og hámarkið er 15360 KB.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir stærstu niðurstöðu fyrirspurnar, í KB af JSON, sem ODBC.Query.Run skilar beint. Stærri niðurstöður eru vistaðar í Blob Staging og svarið skilar stagingId. Sjálfgefið er 1024 KB og hámarkið er 15360 KB.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page ODBC Source Card ori - Control Inline Result Limit (KB) - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 4203541481 - Control 865398282 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies that the source can only be read. Statements that change data are refused.</source>

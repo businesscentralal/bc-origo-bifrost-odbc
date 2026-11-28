@@ -115,7 +115,8 @@ codeunit 10035520 "ODBC Query Run Impl ori" implements "Msg Interface ori", "Msg
     /// <summary>Returns the workflow contract chapter.</summary>
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     begin
-        exit(false);
+        Workflow := Contracts.Workflow();
+        exit(true);
     end;
 
     /// <summary>Returns the examples contract chapter.</summary>

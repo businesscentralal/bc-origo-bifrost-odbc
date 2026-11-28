@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.ODBC;
 
 using Origo.Bifrost;
+using System.Utilities;
 
 /// <summary>Validates agent requests before transport and returns only redacted, typed read results.</summary>
 codeunit 10035521 "ODBC Message Handler ori"
@@ -17,6 +18,7 @@ codeunit 10035521 "ODBC Message Handler ori"
         Response: JsonObject;
         SourceText: Text;
         Token: JsonToken;
+        StageRequested: Boolean;
     begin
         Request := Argument.GetRequestJson();
         Argument.RedactRequestData();
@@ -45,7 +47,7 @@ codeunit 10035521 "ODBC Message Handler ori"
                 exit;
             end;
         end;
-        if not TryExecute(MessageType, Source, Request, Response) then begin
+        if not TryExecute(MessageType, Source, Request, Response, StageRequested) then begin
             // Untrusted transport diagnostics and request values never enter the message error or log.
             ClearLastError();
             Refuse(Argument, Enum::"Bifrost Error Code ori"::PreconditionFailed, '', FailedLbl, CheckSetupLbl);
@@ -57,6 +59,9 @@ codeunit 10035521 "ODBC Message Handler ori"
         end;
         if MessageType = MessageType::"ODBC.Source.Test" then
             CacheIdentity(Source, Response);
+        if MessageType = MessageType::"ODBC.Query.Run" then
+            if not ApplyOutput(Source, StageRequested, Response, Argument) then
+                exit;
         Argument.SetResponseJson(Response);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
@@ -69,8 +74,83 @@ codeunit 10035521 "ODBC Message Handler ori"
         Source.Modify();
     end;
 
+    /// <summary>Returns the result inline, or stores it as one Blob Staging row when staging was requested or the inline limit is exceeded.</summary>
+    /// <returns>False when the result exceeds the staging cap and an error was returned.</returns>
+    local procedure ApplyOutput(Source: Record "ODBC Source ori"; StageRequested: Boolean; var Response: JsonObject; var Argument: Record "Message Argument ori"): Boolean
+    var
+        BlobStaging: Codeunit "Blob Staging ori";
+        TempBlob: Codeunit "Temp Blob";
+        Content: JsonObject;
+        Staged: JsonObject;
+        OutStr: OutStream;
+        InStr: InStream;
+        ContentText: Text;
+        FileName: Text;
+        ByteSize: BigInteger;
+        LimitBytes: BigInteger;
+        MaxBytes: BigInteger;
+        StagingId: Guid;
+    begin
+        Content.Add('columns', Response.GetArray('columns'));
+        Content.Add('rows', Response.GetArray('rows'));
+        Content.WriteTo(ContentText);
+        TempBlob.CreateOutStream(OutStr, TextEncoding::UTF8);
+        OutStr.WriteText(ContentText);
+        ByteSize := TempBlob.Length();
+        LimitBytes := InlineLimitBytes(Source);
+        if (not StageRequested) and (ByteSize <= LimitBytes) then begin
+            Response.Add('staged', false);
+            exit(true);
+        end;
+        MaxBytes := MaxStagedBytes();
+        if ByteSize > MaxBytes then begin
+            Refuse(Argument, Enum::"Bifrost Error Code ori"::LimitExceeded, 'maxRows', StrSubstNo(TooLargeErr, ByteSize, MaxBytes), TooLargeNextStepLbl);
+            exit(false);
+        end;
+        FileName := Source.Code + '-' + Format(CurrentDateTime(), 0, '<Year4><Month,2><Day,2><Hours24,2><Minutes,2><Seconds,2>') + '.json';
+        TempBlob.CreateInStream(InStr);
+        StagingId := BlobStaging.Create(InStr, FileName, StagedContentTypeTok, StagingSourceTok);
+        Staged.Add('status', 'Success');
+        Staged.Add('staged', true);
+        Staged.Add('stagingId', Format(StagingId, 0, 4).ToLower());
+        Staged.Add('rowCount', Response.GetInteger('rowCount'));
+        Staged.Add('columns', Response.GetArray('columns'));
+        Staged.Add('contentType', StagedContentTypeTok);
+        Staged.Add('byteSize', ByteSize);
+        Staged.Add('truncated', Response.GetBoolean('truncated'));
+        Response := Staged;
+        exit(true);
+    end;
+
+    /// <summary>Inline limit in bytes from the source; unset or out-of-range values fall back to the 1 MB default or the 15 MB maximum.</summary>
+    local procedure InlineLimitBytes(Source: Record "ODBC Source ori"): BigInteger
+    var
+        LimitKB: Integer;
+    begin
+        LimitKB := Source."Inline Result Limit (KB)";
+        if LimitKB < 1 then
+            LimitKB := 1024;
+        if LimitKB > 15360 then
+            LimitKB := 15360;
+        exit(LimitKB * 1024);
+    end;
+
+    /// <summary>Largest staged result: the Foundation Blob Staging cap for MCP blobs, 25 MB.</summary>
+    local procedure MaxStagedBytes() MaxBytes: BigInteger
+    begin
+        MaxBytes := 26214400;
+        OnGetMaxStagedBytes(MaxBytes);
+    end;
+
+    /// <summary>Test seam: lets the test app lower the staging cap without building a 25 MB result.</summary>
+    /// <param name="MaxBytes">The staging cap in bytes.</param>
+    [InternalEvent(false)]
+    local procedure OnGetMaxStagedBytes(var MaxBytes: BigInteger)
+    begin
+    end;
+
     [TryFunction]
-    local procedure TryExecute(MessageType: Enum "Message Type ori"; Source: Record "ODBC Source ori"; Request: JsonObject; var Response: JsonObject)
+    local procedure TryExecute(MessageType: Enum "Message Type ori"; Source: Record "ODBC Source ori"; Request: JsonObject; var Response: JsonObject; var StageRequested: Boolean)
     var
         Client: Codeunit "ODBC Client ori";
         Reader: Codeunit "ODBC Reader ori";
@@ -88,6 +168,7 @@ codeunit 10035521 "ODBC Message Handler ori"
         Dbms: Text;
         Version: Text;
         Column: Text;
+        OutputMode: Text;
         MaxRows: Integer;
         StartedAt: DateTime;
     begin
@@ -153,6 +234,22 @@ codeunit 10035521 "ODBC Message Handler ori"
                             Response.Add('invalidParameter', 'parameters');
                             exit;
                         end;
+                    if Request.Get('output', Token) then begin
+                        if not ReadString(Token, OutputMode) then begin
+                            Response.Add('invalidParameter', 'output');
+                            exit;
+                        end;
+                        case OutputMode of
+                            'inline':
+                                StageRequested := false;
+                            'staged':
+                                StageRequested := true;
+                            else begin
+                                Response.Add('invalidParameter', 'output');
+                                exit;
+                            end;
+                        end;
+                    end;
                     if not Statement.IsReadOnly(SQL, Parameters.Count()) then begin
                         Response.Add('invalidParameter', 'sql');
                         exit;
@@ -253,5 +350,9 @@ codeunit 10035521 "ODBC Message Handler ori"
         FailedLbl: Label 'The ODBC read could not be completed.', Comment = 'is-IS=Ekki tókst að ljúka ODBC-lestri.';
         CheckSetupLbl: Label 'Check the source setup and agent availability, then retry.', Comment = 'is-IS=Athugaðu uppsetningu uppsprettu og aðgengi miðlara og reyndu aftur.';
         InvalidRequestLbl: Label 'The ODBC read request is invalid.', Comment = 'is-IS=ODBC-lesbeiðnin er ógild.';
+        StagedContentTypeTok: Label 'application/json', Locked = true;
+        StagingSourceTok: Label 'ODBC', Locked = true;
+        TooLargeErr: Label 'The query result is %1 bytes, which exceeds the Blob Staging limit of %2 bytes.', Comment = '%1 = result size in bytes, %2 = limit in bytes, is-IS=Niðurstaða fyrirspurnarinnar er %1 bæti, sem er yfir %2 bæta hámarki Blob Staging.';
+        TooLargeNextStepLbl: Label 'Lower maxRows or filter the SELECT with a WHERE clause or fewer columns, then retry.', Comment = 'is-IS=Lækkaðu maxRows eða síaðu SELECT-setninguna með WHERE-skilyrði eða færri dálkum og reyndu aftur.';
         ReadContractLbl: Label 'Read the message contract. Send one SELECT, matching positional parameters and a positive maxRows no greater than the source Row Cap. Comments and statement delimiters are refused.', Comment = 'is-IS=Lestu samning skilaboðanna. Sendu eina SELECT-setningu, samsvarandi stika í röð og jákvætt maxRows sem er ekki hærra en línuhámark uppsprettu. Athugasemdum og setningaskilum er hafnað.';
 }

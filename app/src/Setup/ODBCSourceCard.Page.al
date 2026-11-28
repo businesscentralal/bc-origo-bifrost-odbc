@@ -58,6 +58,10 @@ page 10035498 "ODBC Source Card ori"
                 {
                     ToolTip = 'Specifies the maximum number of rows a query returns.', Comment = 'is-IS=Tilgreinir hámarksfjölda lína sem fyrirspurn skilar.';
                 }
+                field("Inline Result Limit (KB)"; Rec."Inline Result Limit (KB)")
+                {
+                    ToolTip = 'Specifies the largest query result, in KB of JSON, that ODBC.Query.Run returns inline. Larger results are stored in Blob Staging and the response returns a stagingId. The default is 1024 KB and the maximum is 15360 KB.', Comment = 'is-IS=Tilgreinir stærstu niðurstöðu fyrirspurnar, í KB af JSON, sem ODBC.Query.Run skilar beint. Stærri niðurstöður eru vistaðar í Blob Staging og svarið skilar stagingId. Sjálfgefið er 1024 KB og hámarkið er 15360 KB.';
+                }
                 field("Timeout (s)"; Rec."Timeout (s)")
                 {
                     ToolTip = 'Specifies the number of seconds before a query times out.', Comment = 'is-IS=Tilgreinir fjölda sekúndna áður en fyrirspurn rennur út á tíma.';

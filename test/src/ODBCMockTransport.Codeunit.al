@@ -57,13 +57,32 @@ codeunit 98122 "ODBC Mock Transport ori" implements "ODBC Transport ori"
                 'GetSchema':
                     Response.ReadFrom('{"dbmsName":"MockDB","objects":[{"name":"https://public.invalid/demo","type":"TABLE","columns":[{"name":"id","type":"INTEGER","nullable":false}]}]}');
                 'Query':
-                    Response.ReadFrom('{"columns":["id","url","pair","secret"],"rows":[{"id":7,"url":"https://public.invalid/docs","pair":"key=value","secret":"prefix fake-relay-key suffix","note":"key=value https://example.org/a"},{"id":8},{"id":9}]}');
+                    if Request.GetText('query') = 'SELECT short FROM XStagedEvidence' then
+                        Response := StagedEvidenceResult()
+                    else
+                        Response.ReadFrom('{"columns":["id","url","pair","secret"],"rows":[{"id":7,"url":"https://public.invalid/docs","pair":"key=value","secret":"prefix fake-relay-key suffix","note":"key=value https://example.org/a"},{"id":8},{"id":9}]}');
                 else
                     Error('The MCP fixture supports reads only.');
             end;
             exit;
         end;
         Response := Reply.Clone().AsObject();
+    end;
+
+    // Short cells keep the secret-redaction scan bounded while the whole result exceeds 1 KB.
+    local procedure StagedEvidenceResult() Result: JsonObject
+    var
+        Columns: JsonArray;
+        Rows: JsonArray;
+        Row: JsonObject;
+        Index: Integer;
+    begin
+        Columns.Add('short');
+        Row.Add('short', 'yyyyyyyyyy');
+        for Index := 1 to 100 do
+            Rows.Add(Row.Clone());
+        Result.Add('columns', Columns);
+        Result.Add('rows', Rows);
     end;
 
     /// <summary>Returns captured request and invocation count.</summary>
